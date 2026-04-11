@@ -510,7 +510,12 @@ function showTab(id,btn){
 // ── CONFIGURAÇÃO JSONBIN ──
 const JSONBIN_KEY = '$2a$10$wc33UpDwxl8UJddj62SROuIM0mH3HKjPUcg4mEbbHeWmqOKCu9vTq';
 const JSONBIN_BASE = 'https://api.jsonbin.io/v3/b';
-let BIN_ID = localStorage.getItem('snkr_bin_id') || null;
+const FIXED_BIN_ID = '69dacaf6856a6821892366f2';
+
+let BIN_ID = localStorage.getItem('snkr_bin_id') || FIXED_BIN_ID;
+if (!localStorage.getItem('snkr_bin_id')) {
+  localStorage.setItem('snkr_bin_id', FIXED_BIN_ID);
+}
 
 let orders = [];
 
@@ -519,35 +524,15 @@ async function loadOrders() {
   container.innerHTML = '<div class="empty-state">A sincronizar...</div>';
 
   try {
-    if (!BIN_ID) {
-      // Primeira vez — criar bin novo
-      const res = await fetch(JSONBIN_BASE, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Master-Key': JSONBIN_KEY,
-          'X-Bin-Name': 'sneaker-orders',
-          'X-Bin-Private': 'true'
-        },
-        body: JSON.stringify([])
-      });
-      const data = await res.json();
-      BIN_ID = data.metadata.id;
-      localStorage.setItem('snkr_bin_id', BIN_ID);
-      orders = [];
-    } else {
-      // Bin já existe — carregar dados
-      const res = await fetch(`${JSONBIN_BASE}/${BIN_ID}/latest`, {
-        headers: { 'X-Master-Key': JSONBIN_KEY }
-      });
-      const data = await res.json();
-      orders = data.record || [];
-    }
+    const res = await fetch(`${JSONBIN_BASE}/${BIN_ID}/latest`, {
+      headers: { 'X-Master-Key': JSONBIN_KEY }
+    });
+    const data = await res.json();
+    orders = data.record.orders || data.record || [];
     localStorage.setItem('snkr_backup', JSON.stringify(orders));
     renderOrders();
   } catch (e) {
     console.error('Erro ao carregar:', e);
-    // Fallback para backup local
     orders = JSON.parse(localStorage.getItem('snkr_backup') || '[]');
     renderOrders();
     showSyncStatus('⚠ Sem ligação — a usar dados locais', 'warn');
@@ -556,7 +541,6 @@ async function loadOrders() {
 
 async function syncDrive() {
   localStorage.setItem('snkr_backup', JSON.stringify(orders));
-  if (!BIN_ID) { await loadOrders(); return; }
   try {
     await fetch(`${JSONBIN_BASE}/${BIN_ID}`, {
       method: 'PUT',
@@ -564,7 +548,7 @@ async function syncDrive() {
         'Content-Type': 'application/json',
         'X-Master-Key': JSONBIN_KEY
       },
-      body: JSON.stringify(orders)
+      body: JSON.stringify({ orders: orders })
     });
   } catch (e) {
     console.error('Erro ao sincronizar:', e);
