@@ -528,7 +528,8 @@ async function loadOrders() {
       headers: { 'X-Master-Key': JSONBIN_KEY }
     });
     const data = await res.json();
-    orders = data.record.orders || data.record || [];
+    const record = data.record;
+    orders = Array.isArray(record) ? record : (record.orders || []);
     localStorage.setItem('snkr_backup', JSON.stringify(orders));
     renderOrders();
   } catch (e) {
