@@ -161,6 +161,7 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
         <button class="base-tab active" onclick="setBase('lefties')">Lefties Casual</button>
         <button class="base-tab" onclick="setBase('adidas')">Adidas Grand Court TD</button>
         <button class="base-tab" onclick="setBase('af1')">Nike Air Force 1</button>
+        <button class="base-tab" onclick="setBase('chinelos')">Nike Benassi JDI</button>
       </div>
       <div class="base-info" id="base-info"></div>
       <div class="promo-note" id="promo-note" style="display:none"></div>
@@ -217,11 +218,7 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
           <div class="bar-row"><span class="bar-label" style="font-weight:500;color:#111">Margem líquida</span><div class="bar-track"><div class="bar-fill" id="b-luc" style="background:#185FA5"></div></div><span class="bar-val" id="lv-luc">—</span></div>
           <div class="nota" id="nota-portes"></div>
         </div>
-        <div class="card">
-          <div class="card-title">Alertas de preço</div>
-          <div style="font-size:12px;color:#666;line-height:1.7">Usa o <strong>Google Alertas</strong> com o nome do produto para receberes notificações. Verifica os links antes de cada compra de stock.</div>
-          <div class="alert-note" style="margin-top:8px">⚠ Promoções terminam sem aviso.</div>
-        </div>
+
       </div>
     </div>
   </div>
@@ -263,6 +260,7 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
       <div class="comp-card"><div><div class="comp-name">Nike Air Force 1 · Adulto</div><div class="comp-sub">~110€</div></div><a class="btn-visit" href="https://www.nike.com/pt/t/sapatilhas-air-force-1-07-ojDkV4tL/CW2288-111" target="_blank">Ver →</a></div>
       <div class="comp-card"><div><div class="comp-name">Nike Force 1 Low · Criança (28–34)</div><div class="comp-sub">~69,99€</div></div><a class="btn-visit" href="https://www.nike.com/pt/t/sapatilhas-force-1-low-easy-on-HdQtoC8p/IH4498-101" target="_blank">Ver →</a></div>
       <div class="comp-card"><div><div class="comp-name">Nike Force 1 Low · Bebé (20–27)</div><div class="comp-sub">~59,90€</div></div><a class="btn-visit" href="https://www.nike.com/pt/t/sapatilhas-force-1-low-easyon-DQs6J0Q1/IH4491-101" target="_blank">Ver →</a></div>
+      <div class="comp-card"><div><div class="comp-name">Nike Benassi JDI · Chinelos</div><div class="comp-sub">Venda sugerida 115€</div></div><a class="btn-visit" href="https://www.nike.com/pt/t/chinelos-benassi-jdi-2KTrDBAW/343880-100" target="_blank">Ver →</a></div>
     </div>
   </div>
 
@@ -289,7 +287,7 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
             <select id="f-produto">
               <option>Lefties Casual · 79€</option><option>Lefties Ed. Limitada · 95€</option>
               <option>Adidas Grand Court TD · 135€</option><option>Adidas Grand Court TD · 160€</option>
-              <option>Nike AF1 Adulto · 185€</option><option>Nike AF1 Adulto · 215€</option>
+              <option>Nike AF1 Adulto · 195€</option><option>Nike AF1 Adulto · 215€</option>
               <option>Nike AF1 Criança (28–34) · 155€</option><option>Nike AF1 Bebé (20–27) · 145€</option>
             </select>
           </div>
@@ -335,7 +333,9 @@ const bases={
   adidas:{shortName:'Adidas Grand Court TD · pele sintética',info:'<strong>Adidas Grand Court TD</strong> · 65€ c/IVA · Pele sintética, lateral lisa all-white, riscas em relevo.',promoNote:'⚠ Atualmente em promoção a 52€ (-20%). Margem calculada com 65€.',link:'https://www.adidas.pt/sapatilhas-de-tenis-e-lifestyle-grand-court-td/JH9363.html',linkLabel:'Ver na Adidas.pt',costComIva:65,
     tiers:[{label:'135€',preco:135,tierLabel:'Premium · Grand Court TD',pill:'rec'},{label:'160€',preco:160,tierLabel:'Premium alto · Grand Court TD',pill:'prem'}]},
   af1:{shortName:'Nike AF1 · couro genuíno',info:'<strong>Nike Air Force 1</strong> · Adulto ~110€ · Criança 69,99€ · Bebé 59,90€ c/IVA · Couro genuíno.',promoNote:'',link:'https://www.nike.com/pt/t/sapatilhas-air-force-1-07-ojDkV4tL/CW2288-111',linkLabel:'Ver AF1 Adulto na Nike',costComIva:110,
-    tiers:[{label:'185€ · adulto',preco:185,tierLabel:'AF1 Adulto · entrada',pill:'rec',cost:110},{label:'215€ · adulto',preco:215,tierLabel:'AF1 Adulto · premium',pill:'prem',cost:110},{label:'155€ · criança',preco:155,tierLabel:'AF1 Criança 28–34',pill:'child',cost:69.99},{label:'145€ · bebé',preco:145,tierLabel:'AF1 Bebé 20–27',pill:'baby',cost:59.90}]}
+    tiers:[{label:'195€ · adulto',preco:195,tierLabel:'AF1 Adulto · entrada',pill:'rec',cost:110},{label:'215€ · adulto',preco:215,tierLabel:'AF1 Adulto · premium',pill:'prem',cost:110},{label:'155€ · criança',preco:155,tierLabel:'AF1 Criança 28–34',pill:'child',cost:69.99},{label:'145€ · bebé',preco:145,tierLabel:'AF1 Bebé 20–27',pill:'baby',cost:59.90}]},
+  chinelos:{shortName:'Nike Benassi JDI · chinelos',info:'<strong>Nike Benassi JDI</strong> · Chinelos clássicos Nike, base para customização. Preço de compra a verificar.',promoNote:'',link:'https://www.nike.com/pt/t/chinelos-benassi-jdi-2KTrDBAW/343880-100',linkLabel:'Ver na Nike',costComIva:30,
+    tiers:[{label:'115€ · custom',preco:115,tierLabel:'Chinelos Benassi JDI custom',pill:'rec'}]}
 };
 const pillL={rec:'Recomendado',prem:'Premium',child:'Criança',baby:'Bebé'};
 const pillC={rec:'pill-rec',prem:'pill-prem',child:'pill-child',baby:'pill-baby'};
@@ -370,7 +370,7 @@ function s(id,v){const e=document.getElementById(id);if(e)e.textContent=v;}
 function bar(fid,vid,val,ref,lbl){const p=Math.max(1,Math.round(Math.abs(val)/ref*100));const e=document.getElementById(fid);e.style.width=p+'%';e.textContent=p>10?p+'%':'';document.getElementById(vid).textContent=lbl;}
 function setBase(key){
   curBase=key;curTier=0;
-  document.querySelectorAll('.base-tab').forEach((b,i)=>b.classList.toggle('active',['lefties','adidas','af1'][i]===key));
+  document.querySelectorAll('.base-tab').forEach((b,i)=>b.classList.toggle('active',['lefties','adidas','af1','chinelos'][i]===key));
   document.getElementById('base-info').innerHTML=bases[key].info;
   const pn=document.getElementById('promo-note');pn.textContent=bases[key].promoNote||'';pn.style.display=bases[key].promoNote?'block':'none';
   const la=document.getElementById('base-link-area');
@@ -412,7 +412,7 @@ function showSync(msg,type){
 // ENCOMENDAS
 const stLabel={material:'Aguarda material',aguarda:'Aguarda pagamento',processo:'Em processamento',enviada:'Enviada',concluida:'Concluída'};
 const stBadge={material:'bs-material',aguarda:'bs-aguarda',processo:'bs-processo',enviada:'bs-enviada',concluida:'bs-concluida'};
-const prodOpts=['Lefties Casual · 79€','Lefties Ed. Limitada · 95€','Adidas Grand Court TD · 135€','Adidas Grand Court TD · 160€','Nike AF1 Adulto · 185€','Nike AF1 Adulto · 215€','Nike AF1 Criança (28–34) · 155€','Nike AF1 Bebé (20–27) · 145€'];
+const prodOpts=['Lefties Casual · 79€','Lefties Ed. Limitada · 95€','Adidas Grand Court TD · 135€','Adidas Grand Court TD · 160€','Nike AF1 Adulto · 195€','Nike AF1 Adulto · 215€','Nike AF1 Criança (28–34) · 155€','Nike AF1 Bebé (20–27) · 145€','Nike Benassi JDI Custom · 115€'];
 let activeFilter='all';
 
 function extractPrice(p){const m=(p||'').match(/(\d+)€/);return m?parseInt(m[1]):0;}
