@@ -3,26 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-id="th-modified">Sneaker Custom — Dashboard</title>
+<title>Sneaker Custom — Dashboard</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
 body { background: #f5f5f3; color: #1a1a1a; padding: 1rem; font-size: 14px; }
-.dash { max-width: 860px; margin: 0 auto; }
+.dash { max-width: 900px; margin: 0 auto; }
 h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 12px; }
-
-/* tabs */
 .tab-nav { display: flex; gap: 4px; margin-bottom: 1.2rem; background: #eeedea; border-radius: 10px; padding: 4px; }
-.tab-btn { flex: 1; padding: 8px; border: none; background: transparent; border-radius: 7px; font-size: 13px; font-weight: 500; color: #666; cursor: pointer; transition: all .15s; }
+.tab-btn { flex: 1; padding: 8px; border: none; background: transparent; border-radius: 7px; font-size: 12px; font-weight: 500; color: #666; cursor: pointer; transition: all .15s; position: relative; }
 .tab-btn.active { background: #fff; color: #111; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
-.tab-panel { display: none; }
-.tab-panel.active { display: block; }
-
-/* cards */
+.tab-badge { position: absolute; top: 2px; right: 4px; background: #dc2626; color: #fff; border-radius: 99px; font-size: 9px; font-weight: 700; padding: 1px 5px; }
+.tab-panel { display: none; } .tab-panel.active { display: block; }
 .card { background: #fff; border: 0.5px solid #e0dfd8; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
 .card-title { font-size: 14px; font-weight: 500; margin-bottom: 12px; }
-.card-sub { font-size: 11px; color: #888; margin-bottom: 10px; }
-
-/* metrics */
 .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1rem; }
 .metric { background: #eeedea; border-radius: 8px; padding: 12px 14px; }
 .metric-label { font-size: 11px; color: #666; margin-bottom: 5px; }
@@ -30,109 +23,86 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
 .metric-sub { font-size: 10px; color: #999; margin-top: 3px; }
 .metric.hi { background: #dbeafe; } .metric.hi .metric-value,.metric.hi .metric-label { color: #1d4ed8; }
 .metric.ok { background: #dcfce7; } .metric.ok .metric-value,.metric.ok .metric-label { color: #15803d; }
-
-/* grid */
+.metric.warn { background: #fef3c7; } .metric.warn .metric-value,.metric.warn .metric-label { color: #92400e; }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 1rem; }
-
-/* base tabs */
 .base-tabs { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
 .base-tab { padding: 4px 10px; border-radius: 8px; border: 0.5px solid #ccc; background: transparent; color: #666; font-size: 11px; cursor: pointer; }
 .base-tab.active { background: #eee; color: #111; border-color: #999; font-weight: 500; }
 .base-info { font-size: 12px; color: #666; background: #f5f5f3; border-radius: 8px; padding: 8px 12px; margin-bottom: 8px; line-height: 1.6; }
 .base-info strong { color: #111; }
-.promo-note { font-size: 11px; color: #92400e; background: #fef3c7; border-radius: 8px; padding: 6px 10px; margin-bottom: 8px; line-height: 1.5; }
+.promo-note { font-size: 11px; color: #92400e; background: #fef3c7; border-radius: 8px; padding: 6px 10px; margin-bottom: 8px; }
 .selector { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
 .sel-btn { padding: 5px 11px; border-radius: 8px; border: 0.5px solid #ccc; background: transparent; color: #666; font-size: 12px; cursor: pointer; }
 .sel-btn.active { background: #dbeafe; color: #1d4ed8; border-color: transparent; font-weight: 500; }
 .pill { display: inline-block; padding: 1px 6px; border-radius: 99px; font-size: 10px; font-weight: 500; margin-left: 4px; }
-.pill-rec { background: #dcfce7; color: #15803d; }
-.pill-prem { background: #dbeafe; color: #1d4ed8; }
-.pill-child { background: #fae8ff; color: #7e22ce; }
-.pill-baby { background: #ffe4e6; color: #be123c; }
-
-/* link buttons */
-.link-btn { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 8px; border: 0.5px solid #ccc; background: #f5f5f3; color: #444; font-size: 11px; text-decoration: none; cursor: pointer; transition: background .15s; margin-right: 6px; margin-bottom: 6px; }
+.pill-rec { background: #dcfce7; color: #15803d; } .pill-prem { background: #dbeafe; color: #1d4ed8; }
+.pill-child { background: #fae8ff; color: #7e22ce; } .pill-baby { background: #ffe4e6; color: #be123c; }
+.link-btn { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 8px; border: 0.5px solid #ccc; background: #f5f5f3; color: #444; font-size: 11px; text-decoration: none; cursor: pointer; margin-right: 6px; margin-bottom: 6px; }
 .link-btn:hover { background: #eee; }
-
-/* bars */
 .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
 .bar-label { min-width: 115px; font-size: 11px; color: #666; }
 .bar-track { flex: 1; background: #eee; border-radius: 4px; height: 13px; overflow: hidden; }
 .bar-fill { height: 100%; border-radius: 4px; transition: width .5s; display: flex; align-items: center; padding-left: 5px; font-size: 10px; font-weight: 500; color: #fff; }
 .bar-val { min-width: 54px; text-align: right; font-weight: 500; font-size: 12px; }
-
-/* iva table */
 .iva-table { width: 100%; font-size: 12px; border-collapse: collapse; }
 .iva-table td { padding: 4px 3px; border-bottom: 0.5px solid #f0f0ee; }
-.iva-table .lbl { color: #666; width: 60%; }
-.iva-table .val { text-align: right; font-weight: 500; }
-.iva-table .red { color: #dc2626; } .iva-table .green { color: #16a34a; }
-.iva-table .warn { color: #d97706; } .iva-table .blue { color: #1d4ed8; }
+.iva-table .lbl { color: #666; width: 60%; } .iva-table .val { text-align: right; font-weight: 500; }
+.iva-table .red { color: #dc2626; } .iva-table .green { color: #16a34a; } .iva-table .warn { color: #d97706; } .iva-table .blue { color: #1d4ed8; }
 .iva-table .sec td { font-size: 10px; color: #aaa; text-transform: uppercase; letter-spacing: .05em; padding: 7px 3px 2px; border-bottom: none; }
 .iva-table .sep td { border-top: 1px solid #ddd; padding-top: 6px; }
-
-/* formula */
 .formula-box { background: #f5f5f3; border-radius: 8px; padding: 7px 10px; font-size: 11px; color: #666; line-height: 1.7; margin-bottom: 10px; }
 .formula-box strong { color: #111; }
-
-/* toggle */
 .toggle-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #666; }
 .toggle-track { position:relative;width:30px;height:17px;background:#ccc;border-radius:9px;transition:background .2s;display:inline-block;flex-shrink:0;cursor:pointer; }
 .toggle-track:has(input:checked) { background:#1d4ed8; }
 .toggle-input { position:absolute;opacity:0;width:100%;height:100%;cursor:pointer;margin:0; }
 .toggle-input:checked ~ .toggle-thumb { transform:translateX(13px); }
 .toggle-thumb { position:absolute;top:2px;left:2px;width:13px;height:13px;background:#fff;border-radius:50%;transition:transform .2s;pointer-events:none; }
-
-/* mat table */
 .mat-table { width: 100%; font-size: 12px; border-collapse: collapse; }
 .mat-table td { padding: 4px 3px; border-bottom: 0.5px solid #f0f0ee; }
-.mat-table .lbl { color: #666; }
-.mat-table .val { text-align: right; font-weight: 500; }
-.mat-table .blue { color: #1d4ed8; }
+.mat-table .lbl { color: #666; } .mat-table .val { text-align: right; font-weight: 500; } .mat-table .blue { color: #1d4ed8; }
 .mat-table .tot td { border-top: 1px solid #ddd; padding-top: 6px; font-weight: 500; }
-
-/* nota */
 .nota { font-size: 11px; color: #999; line-height: 1.7; margin-top: 8px; padding-top: 8px; border-top: 0.5px solid #eee; }
-
-/* competitors */
 .comp-card { background: #f9f8f6; border: 0.5px solid #e0dfd8; border-radius: 10px; padding: 10px 14px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.comp-name { font-size: 13px; font-weight: 500; }
-.comp-sub { font-size: 11px; color: #888; margin-top: 2px; }
+.comp-name { font-size: 13px; font-weight: 500; } .comp-sub { font-size: 11px; color: #888; margin-top: 2px; }
 .btn-visit { padding: 4px 10px; border-radius: 7px; border: 0.5px solid #ccc; background: #fff; font-size: 11px; color: #444; text-decoration: none; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
 .btn-visit:hover { background: #f0f0ee; }
-
-/* orders */
-.order-id { font-size: 13px; font-weight: 500; }
+.order-stats { display: grid; grid-template-columns: repeat(5,1fr); gap: 8px; margin-bottom: 1rem; }
+.ostat { background: #fff; border: 0.5px solid #e0dfd8; border-radius: 10px; padding: 10px 12px; text-align: center; cursor: pointer; transition: all .15s; }
+.ostat:hover { border-color: #aaa; }
+.ostat-val { font-size: 22px; font-weight: 500; }
+.ostat-lbl { font-size: 10px; color: #888; margin-top: 2px; }
+.ostat.f-all.active-filter { border-color: #888; border-width:1.5px; }
+.ostat.f-material.active-filter { border-color: #7e22ce; background: #fae8ff; border-width:1.5px; }
+.ostat.f-aguarda.active-filter { border-color: #92400e; background: #fef3c7; border-width:1.5px; }
+.ostat.f-processo.active-filter { border-color: #1d4ed8; background: #dbeafe; border-width:1.5px; }
+.ostat.f-enviada.active-filter { border-color: #15803d; background: #dcfce7; border-width:1.5px; }
+.order-id { font-size: 12px; font-weight: 500; color: #888; }
 .order-date { font-size: 11px; color: #888; flex-shrink: 0; }
 .order-body { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 12px; color: #666; margin-bottom: 12px; }
 .order-body .field-val { color: #111; font-weight: 500; display: block; margin-top: 1px; }
-
-/* status pills row */
-.status-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
-.s-pill { padding: 5px 12px; border-radius: 99px; border: 0.5px solid #ddd; background: #f5f5f3; font-size: 12px; color: #666; cursor: pointer; transition: all .15s; user-select: none; }
+.status-pills { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+.s-pill { padding: 4px 10px; border-radius: 99px; border: 0.5px solid #ddd; background: #f5f5f3; font-size: 11px; color: #666; cursor: pointer; transition: all .15s; user-select: none; }
 .s-pill:hover { background: #eee; }
-.s-pill.sp-aguarda  { } 
-.s-pill.sp-aguarda.sel  { background: #fef3c7; color: #92400e; border-color: #fcd34d; font-weight: 500; }
-.s-pill.sp-processo { }
-.s-pill.sp-processo.sel { background: #dbeafe; color: #1d4ed8; border-color: #93c5fd; font-weight: 500; }
-.s-pill.sp-enviada  { }
-.s-pill.sp-enviada.sel  { background: #dcfce7; color: #15803d; border-color: #86efac; font-weight: 500; }
-
-/* tracking field — aparece só quando enviada */
+.s-pill.sp-material.sel  { background: #fae8ff; color: #7e22ce; border-color: #d8b4fe; font-weight: 500; }
+.s-pill.sp-aguarda.sel   { background: #fef3c7; color: #92400e; border-color: #fcd34d; font-weight: 500; }
+.s-pill.sp-processo.sel  { background: #dbeafe; color: #1d4ed8; border-color: #93c5fd; font-weight: 500; }
+.s-pill.sp-enviada.sel   { background: #dcfce7; color: #15803d; border-color: #86efac; font-weight: 500; }
+.s-pill.sp-concluida.sel { background: #f1f5f9; color: #475569; border-color: #94a3b8; font-weight: 500; }
 .tracking-area { display: none; background: #f5f5f3; border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; }
 .tracking-area.visible { display: block; }
-.tracking-area label { font-size: 11px; color: #666; display: block; margin-bottom: 4px; }
+.tracking-area label { font-size: 11px; color: #666; display: block; margin-bottom: 3px; margin-top: 8px; }
+.tracking-area label:first-child { margin-top: 0; }
 .tracking-area input { width: 100%; padding: 6px 9px; border: 0.5px solid #ccc; border-radius: 7px; font-size: 12px; background: #fff; }
-
-/* order actions */
-.order-actions { display: flex; align-items: center; gap: 8px; }
-.btn-save { padding: 6px 14px; border-radius: 8px; border: none; background: #1d4ed8; color: #fff; font-size: 12px; font-weight: 500; cursor: pointer; }
-.btn-save:hover { background: #1e40af; }
-.btn-saved { background: #15803d; }
-.btn-del { padding: 5px 10px; border-radius: 8px; border: 0.5px solid #fca5a5; background: #fff; font-size: 12px; color: #dc2626; cursor: pointer; margin-left: auto; }
+.order-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.btn-save { padding: 6px 12px; border-radius: 8px; border: none; background: #1d4ed8; color: #fff; font-size: 12px; font-weight: 500; cursor: pointer; }
+.btn-save:hover { background: #1e40af; } .btn-saved { background: #15803d !important; }
+.btn-sm { padding: 5px 10px; border-radius: 8px; border: 0.5px solid #ccc; background: #f5f5f3; font-size: 11px; color: #444; cursor: pointer; }
+.btn-sm:hover { background: #eee; }
+.btn-del { padding: 5px 10px; border-radius: 8px; border: 0.5px solid #fca5a5; background: #fff; font-size: 11px; color: #dc2626; cursor: pointer; margin-left: auto; }
 .btn-del:hover { background: #fee2e2; }
-
-/* new order form */
+.btn-pdf { padding: 5px 10px; border-radius: 8px; border: 0.5px solid #86efac; background: #fff; font-size: 11px; color: #15803d; cursor: pointer; }
+.btn-pdf:hover { background: #dcfce7; }
 .new-order-form { background: #f9f8f6; border: 0.5px dashed #ccc; border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
 .form-group label { display: block; font-size: 11px; color: #666; margin-bottom: 3px; }
@@ -140,44 +110,47 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
 .btn-primary { padding: 7px 16px; border-radius: 8px; border: none; background: #1d4ed8; color: #fff; font-size: 12px; font-weight: 500; cursor: pointer; }
 .btn-primary:hover { background: #1e40af; }
 .empty-state { text-align: center; padding: 2rem; color: #aaa; font-size: 13px; }
-
-.badge-status { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: 500; margin-left: 6px; }
-.bs-aguarda  { background: #fef3c7; color: #92400e; }
-.bs-processo { background: #dbeafe; color: #1d4ed8; }
-.bs-enviada  { background: #dcfce7; color: #15803d; }
-
+.badge-status { display: inline-block; padding: 2px 7px; border-radius: 99px; font-size: 10px; font-weight: 500; }
+.bs-material  { background: #fae8ff; color: #7e22ce; } .bs-aguarda { background: #fef3c7; color: #92400e; }
+.bs-processo  { background: #dbeafe; color: #1d4ed8; } .bs-enviada { background: #dcfce7; color: #15803d; }
+.bs-concluida { background: #f1f5f9; color: #475569; }
 .alert-note { font-size: 11px; color: #92400e; background: #fef3c7; border-radius: 7px; padding: 5px 10px; margin-top: 6px; }
-
-/* accordion encomendas */
 .order-card { background: #fff; border: 0.5px solid #e0dfd8; border-radius: 10px; margin-bottom: 8px; overflow: hidden; }
-.order-summary { display: flex; align-items: center; gap: 10px; padding: 11px 14px; cursor: pointer; user-select: none; transition: background .12s; }
+.order-card.concluida { opacity: 0.65; }
+.order-summary { display: flex; align-items: center; gap: 8px; padding: 10px 14px; cursor: pointer; user-select: none; transition: background .12s; }
 .order-summary:hover { background: #fafaf8; }
-.order-summary-left { flex: 1; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; min-width: 0; }
-.order-chevron { font-size: 11px; color: #aaa; transition: transform .2s; flex-shrink: 0; }
+.order-summary-left { flex: 1; display: flex; align-items: center; gap: 7px; flex-wrap: wrap; min-width: 0; }
+.order-chevron { font-size: 10px; color: #bbb; transition: transform .2s; flex-shrink: 0; }
 .order-card.open .order-chevron { transform: rotate(90deg); }
 .order-detail { display: none; padding: 0 14px 14px; border-top: 0.5px solid #f0f0ee; }
 .order-card.open .order-detail { display: block; padding-top: 12px; }
-
+.edit-form { display: none; background: #f9f8f6; border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; }
+.edit-form.visible { display: block; }
+.edit-form .form-row { margin-bottom: 6px; }
+.edit-form input, .edit-form select { width: 100%; padding: 5px 8px; border: 0.5px solid #ccc; border-radius: 7px; font-size: 12px; background: #fff; }
+.edit-form label { display: block; font-size: 10px; color: #888; margin-bottom: 2px; }
+.section-divider { font-size: 11px; font-weight: 500; color: #aaa; text-transform: uppercase; letter-spacing: .06em; margin: 16px 0 8px; display: flex; align-items: center; gap: 8px; }
+.section-divider::after { content:''; flex:1; height:0.5px; background:#e0dfd8; }
+.delivery-badge { font-size: 10px; color: #666; background: #f5f5f3; border: 0.5px solid #e0dfd8; border-radius: 99px; padding: 1px 7px; }
+.delivery-badge.urgent { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
 @media(max-width:600px){
-  .metrics { grid-template-columns: 1fr 1fr; }
-  .grid2 { grid-template-columns: 1fr; }
-  .form-row { grid-template-columns: 1fr; }
-  .order-body { grid-template-columns: 1fr; }
+  .metrics { grid-template-columns: 1fr 1fr; } .grid2 { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; } .order-body { grid-template-columns: 1fr; }
+  .order-stats { grid-template-columns: repeat(3,1fr); }
 }
 </style>
-<meta property="og:title" content="Sneaker Custom — Dashboard" data-id="th-modified" ><meta name="description" content="sneaker_dashboard_v10" data-id="th-modified" ><meta property="og:description" content="sneaker_dashboard_v10" data-id="th-modified" ><meta property="og:image" content="https://tiiny.host/assets/logo-purple-bg.png" data-id="th-modified" ><meta property="og:url" content="https://tomato-cori-74.tiiny.site/" data-id="th-modified" ><meta property="og:type" content="website" data-id="th-modified" ><script defer data-domain="tomato-cori-74.tiiny.site" src="https://analytics.tiiny.site/js/plausible.js"></script><script type="text/javascript" src="https://tiiny.host/ad-script.js"></script></head>
+</head>
 <body>
 <div class="dash">
   <h1>Sneaker Custom · Dashboard</h1>
-
   <div class="tab-nav">
     <button class="tab-btn active" onclick="showTab('margens',this)">Margens</button>
     <button class="tab-btn" onclick="showTab('materiais',this)">Materiais</button>
     <button class="tab-btn" onclick="showTab('concorrencia',this)">Concorrência</button>
-    <button class="tab-btn" onclick="showTab('encomendas',this)">Encomendas</button>
+    <button class="tab-btn" id="tab-enc-btn" onclick="showTab('encomendas',this)">Encomendas</button>
   </div>
 
-  <!-- ── MARGENS ── -->
+  <!-- MARGENS -->
   <div id="tab-margens" class="tab-panel active">
     <div class="card">
       <div class="card-title">Base da sapatilha</div>
@@ -192,25 +165,17 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
       <div style="font-size:12px;color:#666;margin-bottom:6px;">Preço de venda (com IVA incluído)</div>
       <div class="selector" id="tier-selector"></div>
     </div>
-
     <div class="metrics">
       <div class="metric"><div class="metric-label">Custo base s/ IVA</div><div class="metric-value" id="v-base-cost">—</div><div class="metric-sub" id="v-base-name">—</div></div>
       <div class="metric hi"><div class="metric-label">Preço venda c/ IVA</div><div class="metric-value" id="v-preco">—</div><div class="metric-sub" id="v-tier-label">—</div></div>
       <div class="metric ok"><div class="metric-label">Margem líquida real</div><div class="metric-value" id="v-margem">—</div><div class="metric-sub" id="v-pct">—</div></div>
       <div class="metric"><div class="metric-label">IVA líquido → Estado</div><div class="metric-value" id="v-iva-estado">—</div><div class="metric-sub">liquidado − deduzido</div></div>
     </div>
-
     <div class="grid2">
       <div class="card">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
           <div class="card-title" style="margin-bottom:0">Detalhe IVA (23%)</div>
-          <div class="toggle-row">
-            <label class="toggle-track">
-              <input type="checkbox" class="toggle-input" id="portes-toggle" checked onchange="render()">
-              <span class="toggle-thumb"></span>
-            </label>
-            <span>Portes oferta</span>
-          </div>
+          <div class="toggle-row"><label class="toggle-track"><input type="checkbox" class="toggle-input" id="portes-toggle" checked onchange="render()"><span class="toggle-thumb"></span></label><span>Portes oferta</span></div>
         </div>
         <div class="formula-box">Margem = <strong>receita s/ IVA</strong> − <strong>custos s/ IVA</strong><br>O IVA é neutro: cobras ao cliente e entregas o líquido ao Estado.</div>
         <table class="iva-table">
@@ -251,25 +216,19 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
         </div>
         <div class="card">
           <div class="card-title">Alertas de preço</div>
-          <div style="font-size:12px;color:#666;line-height:1.7">Usa o <strong>Google Alertas</strong> com o nome do produto para receberes notificações de alteração de preço. Verifica os links das bases antes de cada compra de stock.</div>
-          <div class="alert-note" style="margin-top:8px">⚠ Promoções terminam sem aviso — verifica sempre antes de encomendar.</div>
+          <div style="font-size:12px;color:#666;line-height:1.7">Usa o <strong>Google Alertas</strong> com o nome do produto para receberes notificações. Verifica os links antes de cada compra de stock.</div>
+          <div class="alert-note" style="margin-top:8px">⚠ Promoções terminam sem aviso.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ── MATERIAIS ── -->
+  <!-- MATERIAIS -->
   <div id="tab-materiais" class="tab-panel">
     <div class="card">
       <div class="card-title">Lojas de materiais</div>
-      <a class="link-btn" href="https://shoecare.pt/pt/" target="_blank">
-        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-        Shoecare.pt
-      </a>
-      <a class="link-btn" href="https://angelusbrand.pt/?country=PT" target="_blank">
-        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-        Angelus Brand PT
-      </a>
+      <a class="link-btn" href="https://shoecare.pt/pt/" target="_blank"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Shoecare.pt</a>
+      <a class="link-btn" href="https://angelusbrand.pt/?country=PT" target="_blank"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Angelus Brand PT</a>
       <div style="height:14px"></div>
       <div class="card-title">Custo por par (c/ IVA)</div>
       <table class="mat-table">
@@ -288,66 +247,47 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
     </div>
   </div>
 
-  <!-- ── CONCORRÊNCIA ── -->
+  <!-- CONCORRÊNCIA -->
   <div id="tab-concorrencia" class="tab-panel">
     <div class="card">
       <div class="card-title">Lojas a acompanhar</div>
-      <div class="card-sub">Visita regularmente para monitorizar preços, designs e posicionamento.</div>
-      <div class="comp-card">
-        <div><div class="comp-name">One Custom (França)</div><div class="comp-sub">Custom sneakers premium · referência europeia de posicionamento e preço</div></div>
-        <a class="btn-visit" href="https://www.onecustom.fr/en" target="_blank">Visitar →</a>
-      </div>
+      <div class="comp-card"><div><div class="comp-name">One Custom (França)</div><div class="comp-sub">Custom sneakers premium · referência europeia</div></div><a class="btn-visit" href="https://www.onecustom.fr/en" target="_blank">Visitar →</a></div>
     </div>
     <div class="card">
-      <div class="card-title">Links das tuas bases</div>
-      <div class="comp-card">
-        <div><div class="comp-name">Lefties Casual/Court</div><div class="comp-sub">~17,99€ · Verifica disponibilidade e preço</div></div>
-        <a class="btn-visit" href="https://www.lefties.com/pt/homem/cal%C3%A7ado/t%C3%A9nis/t%C3%AAnis-casual-c1030272289p720278598.html?colorId=001&parentId=720281998" target="_blank">Ver produto →</a>
-      </div>
-      <div class="comp-card">
-        <div><div class="comp-name">Adidas Grand Court TD</div><div class="comp-sub">65€ (normal) · 52€ (promoção atual)</div></div>
-        <a class="btn-visit" href="https://www.adidas.pt/sapatilhas-de-tenis-e-lifestyle-grand-court-td/JH9363.html" target="_blank">Ver produto →</a>
-      </div>
-      <div class="comp-card">
-        <div><div class="comp-name">Nike Air Force 1 · Adulto</div><div class="comp-sub">~110€ · Verifica disponibilidade</div></div>
-        <a class="btn-visit" href="https://www.nike.com/pt/t/sapatilhas-air-force-1-07-ojDkV4tL/CW2288-111" target="_blank">Ver produto →</a>
-      </div>
-      <div class="comp-card">
-        <div><div class="comp-name">Nike Force 1 Low · Criança (28–34)</div><div class="comp-sub">Venda sugerida 155€</div></div>
-        <a class="btn-visit" href="https://www.nike.com/pt/t/sapatilhas-force-1-low-easy-on-HdQtoC8p/IH4498-101" target="_blank">Ver produto →</a>
-      </div>
-      <div class="comp-card">
-        <div><div class="comp-name">Nike Force 1 Low · Bebé (20–27)</div><div class="comp-sub">Venda sugerida 145€</div></div>
-        <a class="btn-visit" href="https://www.nike.com/pt/t/sapatilhas-force-1-low-easyon-DQs6J0Q1/IH4491-101" target="_blank">Ver produto →</a>
-      </div>
+      <div class="card-title">Links das bases</div>
+      <div class="comp-card"><div><div class="comp-name">Lefties Casual/Court</div><div class="comp-sub">~17,99€</div></div><a class="btn-visit" href="https://www.lefties.com/pt/homem/cal%C3%A7ado/t%C3%A9nis/t%C3%AAnis-casual-c1030272289p720278598.html?colorId=001&parentId=720281998" target="_blank">Ver →</a></div>
+      <div class="comp-card"><div><div class="comp-name">Adidas Grand Court TD</div><div class="comp-sub">65€ normal · 52€ promoção</div></div><a class="btn-visit" href="https://www.adidas.pt/sapatilhas-de-tenis-e-lifestyle-grand-court-td/JH9363.html" target="_blank">Ver →</a></div>
+      <div class="comp-card"><div><div class="comp-name">Nike Air Force 1 · Adulto</div><div class="comp-sub">~110€</div></div><a class="btn-visit" href="https://www.nike.com/pt/t/sapatilhas-air-force-1-07-ojDkV4tL/CW2288-111" target="_blank">Ver →</a></div>
+      <div class="comp-card"><div><div class="comp-name">Nike Force 1 Low · Criança (28–34)</div><div class="comp-sub">~69,99€</div></div><a class="btn-visit" href="https://www.nike.com/pt/t/sapatilhas-force-1-low-easy-on-HdQtoC8p/IH4498-101" target="_blank">Ver →</a></div>
+      <div class="comp-card"><div><div class="comp-name">Nike Force 1 Low · Bebé (20–27)</div><div class="comp-sub">~59,90€</div></div><a class="btn-visit" href="https://www.nike.com/pt/t/sapatilhas-force-1-low-easyon-DQs6J0Q1/IH4491-101" target="_blank">Ver →</a></div>
     </div>
   </div>
 
-  <!-- ── ENCOMENDAS ── -->
+  <!-- ENCOMENDAS -->
   <div id="tab-encomendas" class="tab-panel">
+    <div id="fin-summary" class="card" style="margin-bottom:1rem"></div>
+    <div class="order-stats" id="order-stats"></div>
     <div class="card">
-      <div class="card-title">Nova encomenda</div>
-      <div class="new-order-form">
+      <div class="card-title" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;margin-bottom:0" onclick="toggleNewForm()">
+        <span>+ Nova encomenda</span>
+        <span id="new-form-chevron" style="font-size:11px;color:#aaa;transition:transform .2s">▶</span>
+      </div>
+      <div id="new-order-form" style="display:none;margin-top:12px">
         <div class="form-row">
-          <div class="form-group"><label>Nome do cliente</label><input type="text" id="f-nome" placeholder="ex: João Silva"></div>
-          <div class="form-group"><label>Contacto (telefone ou Instagram)</label><input type="text" id="f-contacto" placeholder="ex: @joaosilva ou 9xx..."></div>
+          <div class="form-group"><label>Nome do cliente *</label><input type="text" id="f-nome" placeholder="ex: João Silva"></div>
+          <div class="form-group"><label>Contacto</label><input type="text" id="f-contacto" placeholder="ex: @joaosilva ou 9xx..."></div>
         </div>
         <div class="form-row">
           <div class="form-group"><label>NIF</label><input type="text" id="f-nif" placeholder="ex: 123456789"></div>
           <div class="form-group"><label>Email</label><input type="email" id="f-email" placeholder="ex: joao@email.com"></div>
         </div>
         <div class="form-row">
-          <div class="form-group">
-            <label>Produto</label>
+          <div class="form-group"><label>Produto</label>
             <select id="f-produto">
-              <option>Lefties Casual · 79€</option>
-              <option>Lefties Ed. Limitada · 95€</option>
-              <option>Adidas Grand Court TD · 135€</option>
-              <option>Adidas Grand Court TD · 160€</option>
-              <option>Nike AF1 Adulto · 185€</option>
-              <option>Nike AF1 Adulto · 215€</option>
-              <option>Nike AF1 Criança (28–34) · 155€</option>
-              <option>Nike AF1 Bebé (20–27) · 145€</option>
+              <option>Lefties Casual · 79€</option><option>Lefties Ed. Limitada · 95€</option>
+              <option>Adidas Grand Court TD · 135€</option><option>Adidas Grand Court TD · 160€</option>
+              <option>Nike AF1 Adulto · 185€</option><option>Nike AF1 Adulto · 215€</option>
+              <option>Nike AF1 Criança (28–34) · 155€</option><option>Nike AF1 Bebé (20–27) · 145€</option>
             </select>
           </div>
           <div class="form-group"><label>Tamanho</label><input type="text" id="f-tamanho" placeholder="ex: EU 42"></div>
@@ -360,80 +300,50 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
           <div class="form-group"><label>Código Postal</label><input type="text" id="f-cp" placeholder="ex: 4000-123"></div>
           <div class="form-group"><label>Localidade</label><input type="text" id="f-localidade" placeholder="ex: Porto"></div>
         </div>
-        <button class="btn-primary" onclick="addOrder()">+ Adicionar encomenda</button>
+        <div class="form-row">
+          <div class="form-group"><label>Data prevista de entrega</label><input type="date" id="f-entrega"></div>
+          <div class="form-group" style="display:flex;align-items:flex-end"><button class="btn-primary" style="width:100%" onclick="addOrder()">Adicionar encomenda</button></div>
+        </div>
       </div>
-
-      <div class="card-title">Encomendas em curso</div>
-            <!-- Lista de Encomendas -->
-      <div id="orders-list"></div>
-
-      <!-- Novos Botões de Segurança -->
-      <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #ccc; display: flex; gap: 10px;">
-        <button class="link-btn" onclick="exportData()" style="flex: 1; justify-content: center; margin: 0;">
-          📤 Exportar Backup
-        </button>
-        <button class="link-btn" onclick="importData()" style="flex: 1; justify-content: center; margin: 0;">
-          📥 Importar Backup
-        </button>
-      </div>
-
+    </div>
+    <div id="orders-list"></div>
+    <div id="history-section" style="display:none">
+      <div class="section-divider">Histórico · concluídas</div>
+      <div id="history-list"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+      <button class="btn-sm" onclick="exportData()">📤 Exportar backup</button>
+      <button class="btn-sm" onclick="importData()">📥 Importar backup</button>
     </div>
   </div>
 </div>
 
 <script>
-// ── CONSTANTES ────────────────────────────────────────────────────
-const IVA=0.23, PSIVA=4.80, PCIVA=PSIVA*1.23, MCIVA=6.50, MSIVA=MCIVA/1.23;
+const IVA=0.23,PSIVA=4.80,PCIVA=PSIVA*1.23,MCIVA=6.50,MSIVA=MCIVA/1.23;
+const JSONBIN_KEY='$2a$10$wc33UpDwxl8UJddj62SROuIM0mH3HKjPUcg4mEbbHeWmqOKCu9vTq';
+const JSONBIN_BASE='https://api.jsonbin.io/v3/b';
+const FIXED_BIN_ID='69dacaf6856a6821892366f2';
+let BIN_ID=localStorage.getItem('snkr_bin_id')||FIXED_BIN_ID;
+if(!localStorage.getItem('snkr_bin_id'))localStorage.setItem('snkr_bin_id',FIXED_BIN_ID);
 
 const bases={
-  lefties:{
-    shortName:'Lefties · PU 100%',
-    info:'<strong>Lefties Casual/Court</strong> · ~17,99€ c/IVA · PU 100% · Base de validação. Posicionamento premium pela marca e narrativa.',
-    promoNote:'', link:'https://www.lefties.com/pt/homem/cal%C3%A7ado/t%C3%A9nis/t%C3%AAnis-casual-c1030272289p720278598.html?colorId=001&parentId=720281998',
-    linkLabel:'Ver na Lefties.com', costComIva:17.99,
-    tiers:[
-      {label:'79€ · standard',preco:79,tierLabel:'Standard · posicionamento premium',pill:'rec'},
-      {label:'95€ · ed. limitada',preco:95,tierLabel:'Edição limitada · detalhe extra',pill:'prem'},
-    ]
-  },
-  adidas:{
-    shortName:'Adidas Grand Court TD · pele sintética',
-    info:'<strong>Adidas Grand Court TD</strong> · 65€ c/IVA (preço normal) · Pele sintética, lateral lisa all-white, riscas em relevo.',
-    promoNote:'⚠ Atualmente em promoção a 52€ (-20%). Margem calculada com preço normal 65€.',
-    link:'https://www.adidas.pt/sapatilhas-de-tenis-e-lifestyle-grand-court-td/JH9363.html',
-    linkLabel:'Ver na Adidas.pt', costComIva:65,
-    tiers:[
-      {label:'135€',preco:135,tierLabel:'Premium · Grand Court TD',pill:'rec'},
-      {label:'160€',preco:160,tierLabel:'Premium alto · Grand Court TD',pill:'prem'},
-    ]
-  },
-  af1:{
-    shortName:'Nike AF1 · couro genuíno',
-    info:'<strong>Nike Air Force 1</strong> · ~110€ c/IVA · Couro genuíno, silhueta icónica. Disponível em adulto, criança (28–34) e bebé (20–27).',
-    promoNote:'',
-    link:'https://www.nike.com/pt/t/sapatilhas-air-force-1-07-ojDkV4tL/CW2288-111',
-    linkLabel:'Ver AF1 Adulto na Nike', costComIva:110,
-    tiers:[
-      {label:'185€ · adulto',preco:185,tierLabel:'AF1 Adulto · entrada',pill:'rec'},
-      {label:'215€ · adulto',preco:215,tierLabel:'AF1 Adulto · premium',pill:'prem'},
-      {label:'155€ · criança',preco:155,tierLabel:'AF1 Criança 28–34',pill:'child'},
-      {label:'145€ · bebé',preco:145,tierLabel:'AF1 Bebé 20–27',pill:'baby'},
-    ]
-  }
+  lefties:{shortName:'Lefties · PU 100%',info:'<strong>Lefties Casual/Court</strong> · ~17,99€ c/IVA · PU 100% · Base de validação.',promoNote:'',link:'https://www.lefties.com/pt/homem/cal%C3%A7ado/t%C3%A9nis/t%C3%AAnis-casual-c1030272289p720278598.html?colorId=001&parentId=720281998',linkLabel:'Ver na Lefties.com',costComIva:17.99,
+    tiers:[{label:'79€ · standard',preco:79,tierLabel:'Standard · posicionamento premium',pill:'rec'},{label:'95€ · ed. limitada',preco:95,tierLabel:'Edição limitada · detalhe extra',pill:'prem'}]},
+  adidas:{shortName:'Adidas Grand Court TD · pele sintética',info:'<strong>Adidas Grand Court TD</strong> · 65€ c/IVA · Pele sintética, lateral lisa all-white, riscas em relevo.',promoNote:'⚠ Atualmente em promoção a 52€ (-20%). Margem calculada com 65€.',link:'https://www.adidas.pt/sapatilhas-de-tenis-e-lifestyle-grand-court-td/JH9363.html',linkLabel:'Ver na Adidas.pt',costComIva:65,
+    tiers:[{label:'135€',preco:135,tierLabel:'Premium · Grand Court TD',pill:'rec'},{label:'160€',preco:160,tierLabel:'Premium alto · Grand Court TD',pill:'prem'}]},
+  af1:{shortName:'Nike AF1 · couro genuíno',info:'<strong>Nike Air Force 1</strong> · Adulto ~110€ · Criança 69,99€ · Bebé 59,90€ c/IVA · Couro genuíno.',promoNote:'',link:'https://www.nike.com/pt/t/sapatilhas-air-force-1-07-ojDkV4tL/CW2288-111',linkLabel:'Ver AF1 Adulto na Nike',costComIva:110,
+    tiers:[{label:'185€ · adulto',preco:185,tierLabel:'AF1 Adulto · entrada',pill:'rec',cost:110},{label:'215€ · adulto',preco:215,tierLabel:'AF1 Adulto · premium',pill:'prem',cost:110},{label:'155€ · criança',preco:155,tierLabel:'AF1 Criança 28–34',pill:'child',cost:69.99},{label:'145€ · bebé',preco:145,tierLabel:'AF1 Bebé 20–27',pill:'baby',cost:59.90}]}
 };
-
 const pillL={rec:'Recomendado',prem:'Premium',child:'Criança',baby:'Bebé'};
 const pillC={rec:'pill-rec',prem:'pill-prem',child:'pill-child',baby:'pill-baby'};
-let curBase='lefties', curTier=0;
+let curBase='lefties',curTier=0;
 
-// ── MARGENS ───────────────────────────────────────────────────────
 function fmt(v){return (Math.round(v*100)/100).toFixed(2).replace('.',',')+' €';}
-
 function render(){
   const b=bases[curBase],t=b.tiers[curTier];
   const po=document.getElementById('portes-toggle').checked;
   const pvp=t.preco,ivaL=pvp-pvp/1.23,rSiva=pvp/1.23;
-  const bCiva=b.costComIva,bSiva=bCiva/1.23,bDed=bCiva-bSiva;
+  const bCiva=t.cost!==undefined?t.cost:b.costComIva,bSiva=bCiva/1.23,bDed=bCiva-bSiva;
   const mSiva=MSIVA,mDed=MCIVA-mSiva;
   const pSiva=po?PSIVA:0,pDed=po?PCIVA-PSIVA:0;
   const ivaD=bDed+mDed+pDed,ivaE=ivaL-ivaD;
@@ -442,280 +352,265 @@ function render(){
   s('iv-base-civa','− '+fmt(bCiva));s('iv-base-siva',fmt(bSiva));s('iv-base-ded','+ '+fmt(bDed));
   s('iv-mat-civa','− '+fmt(MCIVA));s('iv-mat-siva',fmt(mSiva));s('iv-mat-ded','+ '+fmt(mDed));
   s('iv-port-civa',po?'− '+fmt(PCIVA):'0,00 € (cliente paga)');
-  s('iv-port-siva',po?fmt(PSIVA):'0,00 €');
-  s('iv-port-ded',po?'+ '+fmt(pDed):'0,00 €');
+  s('iv-port-siva',po?fmt(PSIVA):'0,00 €');s('iv-port-ded',po?'+ '+fmt(pDed):'0,00 €');
   s('lbl-port',po?'Portes CTT c/ IVA':'Portes CTT (cliente paga)');
   s('iv2-liq','− '+fmt(ivaL));s('iv2-ded','+ '+fmt(ivaD));s('iv2-estado',fmt(ivaE));
   s('iv-m-receita',fmt(rSiva));s('iv-m-base',fmt(bSiva));s('iv-m-mat',fmt(mSiva));
-  s('iv-m-port',po?fmt(pSiva):'0,00 €');
-  s('iv-m-port-lbl',po?'− Portes s/ IVA':'− Portes (cliente paga)');
-  s('iv-m-total',fmt(mg));
-  s('v-base-cost',fmt(bSiva));s('v-base-name',b.shortName);
-  s('v-preco',fmt(pvp));s('v-tier-label',t.tierLabel);
-  s('v-margem',fmt(mg));s('v-pct','~'+pct+'% da receita s/ IVA');
-  s('v-iva-estado',fmt(ivaE));
-  bar('b-base','lv-base',bSiva,rSiva,fmt(bSiva));
-  bar('b-mat','lv-mat',mSiva,rSiva,fmt(mSiva));
-  bar('b-env','lv-env',pSiva,rSiva,po?fmt(pSiva):'0,00 €');
-  bar('b-luc','lv-luc',mg,rSiva,fmt(mg));
-  s('nota-portes',po?'Portes: pagas 5,90€ c/IVA → custo real 4,80€ s/IVA. IVA de 1,10€ recuperas na dedução.':'Portes: o cliente paga. O teu custo é 0€.');
+  s('iv-m-port',po?fmt(pSiva):'0,00 €');s('iv-m-port-lbl',po?'− Portes s/ IVA':'− Portes (cliente paga)');
+  s('iv-m-total',fmt(mg));s('v-base-cost',fmt(bSiva));s('v-base-name',b.shortName);
+  s('v-preco',fmt(pvp));s('v-tier-label',t.tierLabel);s('v-margem',fmt(mg));s('v-pct','~'+pct+'% da receita s/ IVA');s('v-iva-estado',fmt(ivaE));
+  bar('b-base','lv-base',bSiva,rSiva,fmt(bSiva));bar('b-mat','lv-mat',mSiva,rSiva,fmt(mSiva));
+  bar('b-env','lv-env',pSiva,rSiva,po?fmt(pSiva):'0,00 €');bar('b-luc','lv-luc',mg,rSiva,fmt(mg));
+  s('nota-portes',po?'Portes: pagas 5,90€ c/IVA → custo real 4,80€ s/IVA. IVA de 1,10€ recuperas na dedução.':'Portes: o cliente paga. Custo é 0€.');
 }
-
 function s(id,v){const e=document.getElementById(id);if(e)e.textContent=v;}
-function bar(fid,vid,val,ref,lbl){
-  const p=Math.max(1,Math.round(Math.abs(val)/ref*100));
-  const e=document.getElementById(fid);
-  e.style.width=p+'%';e.textContent=p>10?p+'%':'';
-  document.getElementById(vid).textContent=lbl;
-}
-
+function bar(fid,vid,val,ref,lbl){const p=Math.max(1,Math.round(Math.abs(val)/ref*100));const e=document.getElementById(fid);e.style.width=p+'%';e.textContent=p>10?p+'%':'';document.getElementById(vid).textContent=lbl;}
 function setBase(key){
   curBase=key;curTier=0;
   document.querySelectorAll('.base-tab').forEach((b,i)=>b.classList.toggle('active',['lefties','adidas','af1'][i]===key));
   document.getElementById('base-info').innerHTML=bases[key].info;
-  const pn=document.getElementById('promo-note');
-  pn.textContent=bases[key].promoNote||'';pn.style.display=bases[key].promoNote?'block':'none';
+  const pn=document.getElementById('promo-note');pn.textContent=bases[key].promoNote||'';pn.style.display=bases[key].promoNote?'block':'none';
   const la=document.getElementById('base-link-area');
   const ico='<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
   la.innerHTML=`<a class="link-btn" href="${bases[key].link}" target="_blank">${ico}${bases[key].linkLabel}</a>`;
-  if(key==='af1'){
-    la.innerHTML+=`<a class="link-btn" href="https://www.nike.com/pt/t/sapatilhas-force-1-low-easy-on-HdQtoC8p/IH4498-101" target="_blank">${ico}AF1 Criança</a>`;
-    la.innerHTML+=`<a class="link-btn" href="https://www.nike.com/pt/t/sapatilhas-force-1-low-easyon-DQs6J0Q1/IH4491-101" target="_blank">${ico}AF1 Bebé</a>`;
-  }
+  if(key==='af1'){la.innerHTML+=`<a class="link-btn" href="https://www.nike.com/pt/t/sapatilhas-force-1-low-easy-on-HdQtoC8p/IH4498-101" target="_blank">${ico}AF1 Criança</a><a class="link-btn" href="https://www.nike.com/pt/t/sapatilhas-force-1-low-easyon-DQs6J0Q1/IH4491-101" target="_blank">${ico}AF1 Bebé</a>`;}
   renderTiers();render();
 }
+function setTier(idx){curTier=idx;document.querySelectorAll('.sel-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));render();}
+function renderTiers(){document.getElementById('tier-selector').innerHTML=bases[curBase].tiers.map((t,i)=>`<button class="sel-btn${i===0?' active':''}" onclick="setTier(${i})">${t.label}<span class="pill ${pillC[t.pill]}">${pillL[t.pill]}</span></button>`).join('');}
+function showTab(id,btn){document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById('tab-'+id).classList.add('active');btn.classList.add('active');}
 
-function setTier(idx){
-  curTier=idx;
-  document.querySelectorAll('.sel-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));
-  render();
-}
-
-function renderTiers(){
-  document.getElementById('tier-selector').innerHTML=
-    bases[curBase].tiers.map((t,i)=>
-      `<button class="sel-btn${i===0?' active':''}" onclick="setTier(${i})">${t.label}<span class="pill ${pillC[t.pill]}">${pillL[t.pill]}</span></button>`
-    ).join('');
-}
-
-// ── TABS ──────────────────────────────────────────────────────────
-function showTab(id,btn){
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  btn.classList.add('active');
-}
-
-// ── ENCOMENDAS ────────────────────────────────────────────────────
-// ── CONFIGURAÇÃO JSONBIN ──
-const JSONBIN_KEY = '$2a$10$wc33UpDwxl8UJddj62SROuIM0mH3HKjPUcg4mEbbHeWmqOKCu9vTq';
-const JSONBIN_BASE = 'https://api.jsonbin.io/v3/b';
-const FIXED_BIN_ID = '69dacaf6856a6821892366f2';
-
-let BIN_ID = localStorage.getItem('snkr_bin_id') || FIXED_BIN_ID;
-if (!localStorage.getItem('snkr_bin_id')) {
-  localStorage.setItem('snkr_bin_id', FIXED_BIN_ID);
-}
-
-let orders = [];
-
-async function loadOrders() {
-  const container = document.getElementById('orders-list');
-  container.innerHTML = '<div class="empty-state">A sincronizar...</div>';
-
-  try {
-    const res = await fetch(`${JSONBIN_BASE}/${BIN_ID}/latest`, {
-      headers: { 'X-Master-Key': JSONBIN_KEY }
-    });
-    const data = await res.json();
-    const record = data.record;
-    orders = Array.isArray(record) ? record : (record.orders || []);
-    localStorage.setItem('snkr_backup', JSON.stringify(orders));
-    renderOrders();
-  } catch (e) {
-    console.error('Erro ao carregar:', e);
-    orders = JSON.parse(localStorage.getItem('snkr_backup') || '[]');
-    renderOrders();
-    showSyncStatus('⚠ Sem ligação — a usar dados locais', 'warn');
+// JSONBIN
+let orders=[];
+async function loadOrders(){
+  document.getElementById('orders-list').innerHTML='<div class="empty-state">A sincronizar...</div>';
+  try{
+    const res=await fetch(`${JSONBIN_BASE}/${BIN_ID}/latest`,{headers:{'X-Master-Key':JSONBIN_KEY}});
+    const data=await res.json();const rec=data.record;
+    orders=Array.isArray(rec)?rec:(rec.orders||[]);
+    localStorage.setItem('snkr_backup',JSON.stringify(orders));renderAll();
+  }catch(e){
+    orders=JSON.parse(localStorage.getItem('snkr_backup')||'[]');renderAll();
+    showSync('⚠ Sem ligação — a usar dados locais','warn');
   }
 }
-
-async function syncDrive() {
-  localStorage.setItem('snkr_backup', JSON.stringify(orders));
-  try {
-    await fetch(`${JSONBIN_BASE}/${BIN_ID}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': JSONBIN_KEY
-      },
-      body: JSON.stringify({ orders: orders })
-    });
-  } catch (e) {
-    console.error('Erro ao sincronizar:', e);
-    showSyncStatus('⚠ Erro ao sincronizar — dados guardados localmente', 'warn');
-  }
+async function syncDrive(){
+  localStorage.setItem('snkr_backup',JSON.stringify(orders));
+  try{await fetch(`${JSONBIN_BASE}/${BIN_ID}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},body:JSON.stringify({orders})});}
+  catch(e){showSync('⚠ Erro ao sincronizar','warn');}
+}
+function showSync(msg,type){
+  let el=document.getElementById('sync-status');
+  if(!el){el=document.createElement('div');el.id='sync-status';el.style.cssText='font-size:11px;padding:5px 10px;border-radius:7px;margin-bottom:10px;';document.getElementById('orders-list').before(el);}
+  el.textContent=msg;el.style.background=type==='warn'?'#fef3c7':'#dcfce7';el.style.color=type==='warn'?'#92400e':'#15803d';
+  setTimeout(()=>el.remove(),4000);
 }
 
-function showSyncStatus(msg, type) {
-  let el = document.getElementById('sync-status');
-  if (!el) {
-    el = document.createElement('div');
-    el.id = 'sync-status';
-    el.style.cssText = 'font-size:11px;padding:5px 10px;border-radius:7px;margin-bottom:10px;';
-    document.getElementById('orders-list').before(el);
-  }
-  el.textContent = msg;
-  el.style.background = type === 'warn' ? '#fef3c7' : '#dcfce7';
-  el.style.color = type === 'warn' ? '#92400e' : '#15803d';
-  setTimeout(() => el.remove(), 4000);
+// ENCOMENDAS
+const stLabel={material:'Aguarda material',aguarda:'Aguarda pagamento',processo:'Em processamento',enviada:'Enviada',concluida:'Concluída'};
+const stBadge={material:'bs-material',aguarda:'bs-aguarda',processo:'bs-processo',enviada:'bs-enviada',concluida:'bs-concluida'};
+const prodOpts=['Lefties Casual · 79€','Lefties Ed. Limitada · 95€','Adidas Grand Court TD · 135€','Adidas Grand Court TD · 160€','Nike AF1 Adulto · 185€','Nike AF1 Adulto · 215€','Nike AF1 Criança (28–34) · 155€','Nike AF1 Bebé (20–27) · 145€'];
+let activeFilter='all';
+
+function extractPrice(p){const m=(p||'').match(/(\d+)€/);return m?parseInt(m[1]):0;}
+function toggleNewForm(){const f=document.getElementById('new-order-form'),c=document.getElementById('new-form-chevron');const o=f.style.display==='block';f.style.display=o?'none':'block';c.style.transform=o?'':'rotate(90deg)';}
+
+function addOrder(){
+  const nome=document.getElementById('f-nome').value.trim();
+  if(!nome){alert('Nome do cliente é obrigatório.');return;}
+  orders.unshift({id:'ENC-'+String(Date.now()).slice(-5),date:new Date().toLocaleDateString('pt-PT'),nome,
+    contacto:document.getElementById('f-contacto').value.trim(),nif:document.getElementById('f-nif').value.trim(),
+    email:document.getElementById('f-email').value.trim(),produto:document.getElementById('f-produto').value,
+    tamanho:document.getElementById('f-tamanho').value.trim(),morada:document.getElementById('f-morada').value.trim(),
+    cp:document.getElementById('f-cp').value.trim(),localidade:document.getElementById('f-localidade').value.trim(),
+    notas:document.getElementById('f-notas').value.trim(),entrega:document.getElementById('f-entrega').value,
+    status:'aguarda',tracking:'',fatura:'',open:false,editing:false});
+  syncDrive();renderAll();
+  ['f-nome','f-contacto','f-nif','f-email','f-tamanho','f-morada','f-cp','f-localidade','f-notas','f-entrega'].forEach(f=>document.getElementById(f).value='');
 }
 
-function addOrder() {
-  const nome = document.getElementById('f-nome').value.trim();
-  if(!nome){ alert('Nome do cliente é obrigatório.'); return; }
-  
-  orders.unshift({
-    id: 'ENC-' + String(Date.now()).slice(-5),
-    date: new Date().toLocaleDateString('pt-PT'),
-    nome, 
-    contacto: document.getElementById('f-contacto').value.trim(),
-    nif: document.getElementById('f-nif').value.trim(),
-    email: document.getElementById('f-email').value.trim(),
-    produto: document.getElementById('f-produto').value,
-    tamanho: document.getElementById('f-tamanho').value.trim(),
-    morada: document.getElementById('f-morada').value.trim(),
-    cp: document.getElementById('f-cp').value.trim(),
-    localidade: document.getElementById('f-localidade').value.trim(),
-    notas: document.getElementById('f-notas').value.trim(),
-    status: 'aguarda', 
-    tracking: '',
-    open: true
-  });
-  
-  syncDrive(); 
-  renderOrders();
-  ['f-nome','f-contacto','f-nif','f-email','f-tamanho','f-morada','f-cp','f-localidade','f-notas'].forEach(f => document.getElementById(f).value = '');
+function pickStatus(idx,st){orders[idx].status=st;if(st!=='enviada'){orders[idx].tracking='';orders[idx].fatura='';}syncDrive();renderAll();}
+function toggleOrder(idx){orders[idx].open=!orders[idx].open;renderAll();}
+function toggleEdit(idx){orders[idx].editing=!orders[idx].editing;if(!orders[idx].open)orders[idx].open=true;renderAll();}
+
+function saveEdit(idx){
+  const g=id=>document.getElementById(id+'-'+idx);
+  orders[idx].nome=g('e-nome').value.trim()||orders[idx].nome;
+  orders[idx].contacto=g('e-contacto').value.trim();orders[idx].nif=g('e-nif').value.trim();
+  orders[idx].email=g('e-email').value.trim();orders[idx].produto=g('e-produto').value;
+  orders[idx].tamanho=g('e-tamanho').value.trim();orders[idx].morada=g('e-morada').value.trim();
+  orders[idx].cp=g('e-cp').value.trim();orders[idx].localidade=g('e-localidade').value.trim();
+  orders[idx].notas=g('e-notas').value.trim();orders[idx].entrega=g('e-entrega').value;
+  orders[idx].editing=false;syncDrive();renderAll();
 }
 
-function pickStatus(idx, pill, st) {
-  orders[idx].status = st;
-  if(st !== 'enviada') orders[idx].tracking = '';
+function saveOrder(idx){
+  const ti=document.getElementById('tracking-'+idx);if(ti)orders[idx].tracking=ti.value.trim();
+  const fi=document.getElementById('fatura-'+idx);if(fi)orders[idx].fatura=fi.value.trim();
   syncDrive();
-  renderOrders();
+  const btn=document.getElementById('savebtn-'+idx);
+  if(btn){btn.textContent='Sincronizado ✓';btn.classList.add('btn-saved');setTimeout(()=>{btn.textContent='Gravar';btn.classList.remove('btn-saved');},2000);}
 }
 
-function saveOrder(idx) {
-  const ti = document.getElementById('tracking-' + idx);
-  if(ti) orders[idx].tracking = ti.value.trim();
-  
-  syncDrive();
-  const btn = document.getElementById('savebtn-' + idx);
-  if(btn){ 
-    btn.textContent = 'Sincronizado ✓'; 
-    btn.classList.add('btn-saved');
-    setTimeout(() => { 
-      btn.textContent = 'Gravar e Sincronizar'; 
-      btn.classList.remove('btn-saved'); 
-    }, 1800); 
-  }
+function deleteOrder(idx){
+  if(!confirm('Apagar encomenda '+orders[idx].id+'?'))return;
+  orders.splice(idx,1);syncDrive();renderAll();
 }
 
-function deleteOrder(idx) {
-  if(!confirm('Apagar encomenda ' + orders[idx].id + '?')) return;
-  orders.splice(idx, 1); 
-  syncDrive(); 
-  renderOrders();
+function gerarPDF(idx){
+  const o=orders[idx];
+  const mf=[o.morada,[o.cp,o.localidade].filter(Boolean).join(' ')].filter(Boolean).join(', ')||'—';
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Nota ${o.id}</title>
+  <style>body{font-family:system-ui,sans-serif;max-width:600px;margin:40px auto;padding:20px;color:#111}h2{font-size:18px;margin-bottom:4px}.sub{color:#888;font-size:12px;margin-bottom:24px}table{width:100%;border-collapse:collapse;font-size:13px}td{padding:8px 6px;border-bottom:0.5px solid #eee}td:first-child{color:#666;width:40%}.total{font-size:15px;font-weight:600;border-top:2px solid #111;border-bottom:none}.footer{margin-top:32px;font-size:11px;color:#aaa;text-align:center}</style>
+  </head><body><h2>Nota de Encomenda</h2><div class="sub">${o.id} · ${o.date}</div>
+  <table>
+  <tr><td>Cliente</td><td>${o.nome}</td></tr>
+  ${o.nif?`<tr><td>NIF</td><td>${o.nif}</td></tr>`:''}
+  ${o.email?`<tr><td>Email</td><td>${o.email}</td></tr>`:''}
+  ${o.contacto?`<tr><td>Contacto</td><td>${o.contacto}</td></tr>`:''}
+  <tr><td>Morada</td><td>${mf}</td></tr>
+  <tr><td>Produto</td><td>${o.produto}</td></tr>
+  ${o.tamanho?`<tr><td>Tamanho</td><td>EU ${o.tamanho}</td></tr>`:''}
+  ${o.notas?`<tr><td>Notas</td><td>${o.notas}</td></tr>`:''}
+  ${o.entrega?`<tr><td>Entrega prevista</td><td>${new Date(o.entrega).toLocaleDateString('pt-PT')}</td></tr>`:''}
+  ${o.tracking?`<tr><td>Tracking GLS</td><td>${o.tracking}</td></tr>`:''}
+  ${o.fatura?`<tr><td>Nº Fatura</td><td>${o.fatura}</td></tr>`:''}
+  <tr><td class="total">Total</td><td class="total">${extractPrice(o.produto)},00 €</td></tr>
+  </table>
+  <div class="footer">Arte customizada independente, sem afiliação oficial com as marcas referenciadas.</div>
+  <script>window.print();<\/script></body></html>`);
+  w.document.close();
 }
 
-const stLabel = {aguarda:'Aguarda pagamento', processo:'Em processamento', enviada:'Enviada'};
-const stBadge = {aguarda:'bs-aguarda', processo:'bs-processo', enviada:'bs-enviada'};
-
-function toggleOrder(idx) {
-  orders[idx].open = !orders[idx].open;
-  renderOrders();
+function deliveryBadge(entrega){
+  if(!entrega)return'';
+  const d=new Date(entrega),now=new Date(),diff=Math.ceil((d-now)/(1000*60*60*24));
+  if(diff<0)return`<span class="delivery-badge urgent">Atrasado</span>`;
+  if(diff<=3)return`<span class="delivery-badge urgent">Entrega em ${diff}d</span>`;
+  return`<span class="delivery-badge">Entrega ${d.toLocaleDateString('pt-PT',{day:'2-digit',month:'short'})}</span>`;
 }
 
-function renderOrders() {
-  const el = document.getElementById('orders-list');
-  if(!orders.length){ el.innerHTML = '<div class="empty-state">Nenhuma encomenda ainda.</div>'; return; }
-  
-  el.innerHTML = orders.map((o, i) => `
-    <div class="order-card${o.open ? ' open' : ''}">
-      <div class="order-summary" onclick="toggleOrder(${i})">
-        <div class="order-summary-left">
-          <span class="order-id">${o.id}</span>
-          <span style="font-size:13px;color:#444;font-weight:500">${o.nome}</span>
-          <span style="font-size:12px;color:#666">${o.produto}</span>
-          <span class="badge-status ${stBadge[o.status]}">${stLabel[o.status]}</span>
-        </div>
-        <span class="order-date">${o.date}</span>
-        <span class="order-chevron">▶</span>
+function setFilter(f){activeFilter=f;renderAll();}
+
+function renderAll(){renderStats();renderFinancial();renderOrders();updateTabBadge();}
+
+function renderStats(){
+  const counts={all:orders.filter(o=>o.status!=='concluida').length,material:0,aguarda:0,processo:0,enviada:0};
+  orders.forEach(o=>{if(o.status!=='concluida'&&counts[o.status]!==undefined)counts[o.status]++;});
+  const colors={all:'#111',material:'#7e22ce',aguarda:'#92400e',processo:'#1d4ed8',enviada:'#15803d'};
+  document.getElementById('order-stats').innerHTML=
+    [['all','Ativas'],['material','Material'],['aguarda','Pagamento'],['processo','Processo'],['enviada','Enviadas']]
+    .map(([k,l])=>`<div class="ostat f-${k}${activeFilter===k?' active-filter':''}" onclick="setFilter('${k}')"><div class="ostat-val" style="color:${colors[k]}">${counts[k]}</div><div class="ostat-lbl">${l}</div></div>`).join('');
+}
+
+function renderFinancial(){
+  const faturado=orders.filter(o=>o.status==='enviada'||o.status==='concluida').reduce((s,o)=>s+extractPrice(o.produto),0);
+  const emProcesso=orders.filter(o=>o.status==='processo').reduce((s,o)=>s+extractPrice(o.produto),0);
+  const aguardaPag=orders.filter(o=>o.status==='aguarda').reduce((s,o)=>s+extractPrice(o.produto),0);
+  const aguardaMat=orders.filter(o=>o.status==='material').reduce((s,o)=>s+extractPrice(o.produto),0);
+  document.getElementById('fin-summary').innerHTML=`
+    <div class="card-title">Resumo financeiro</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+      <div class="metric" style="background:#fae8ff"><div class="metric-label" style="color:#7e22ce">Aguarda material</div><div class="metric-value" style="color:#7e22ce">${aguardaMat}€</div></div>
+      <div class="metric" style="background:#fef3c7"><div class="metric-label" style="color:#92400e">Aguarda pagamento</div><div class="metric-value" style="color:#92400e">${aguardaPag}€</div></div>
+      <div class="metric hi"><div class="metric-label">Em processamento</div><div class="metric-value">${emProcesso}€</div></div>
+      <div class="metric ok"><div class="metric-label">Faturado (enviado)</div><div class="metric-value">${faturado}€</div></div>
+    </div>`;
+}
+
+function updateTabBadge(){
+  const n=orders.filter(o=>o.status==='aguarda'||o.status==='material').length;
+  const btn=document.getElementById('tab-enc-btn');
+  const ex=btn.querySelector('.tab-badge');if(ex)ex.remove();
+  if(n>0){const b=document.createElement('span');b.className='tab-badge';b.textContent=n;btn.appendChild(b);}
+}
+
+function renderOrders(){
+  const active=activeFilter==='all'?orders.filter(o=>o.status!=='concluida'):orders.filter(o=>o.status===activeFilter&&o.status!=='concluida');
+  const concluded=orders.filter(o=>o.status==='concluida');
+  const el=document.getElementById('orders-list');
+  el.innerHTML=active.length?active.map(o=>renderCard(o,orders.indexOf(o))).join(''):`<div class="empty-state">${activeFilter==='all'?'Nenhuma encomenda ativa.':'Nenhuma encomenda com este estado.'}</div>`;
+  const hs=document.getElementById('history-section'),hl=document.getElementById('history-list');
+  if(concluded.length){hs.style.display='block';hl.innerHTML=concluded.map(o=>renderCard(o,orders.indexOf(o))).join('');}else{hs.style.display='none';}
+}
+
+function renderCard(o,idx){
+  const mf=[o.morada,[o.cp,o.localidade].filter(Boolean).join(' ')].filter(Boolean).join(', ')||'—';
+  const extra=[o.tamanho?`EU ${o.tamanho}`:'',o.notas?`📝 ${o.notas}`:''].filter(Boolean).join(' · ');
+  return `<div class="order-card${o.open?' open':''}${o.status==='concluida'?' concluida':''}">
+    <div class="order-summary" onclick="toggleOrder(${idx})">
+      <div class="order-summary-left">
+        <span class="order-id">${o.id}</span>
+        <span style="font-size:13px;color:#111;font-weight:500">${o.nome}</span>
+        <span style="font-size:11px;color:#777">${o.produto}</span>
+        <span class="badge-status ${stBadge[o.status]||'bs-aguarda'}">${stLabel[o.status]||'—'}</span>
+        ${deliveryBadge(o.entrega)}
+        ${extra?`<span style="font-size:11px;color:#bbb">${extra}</span>`:''}
       </div>
-      <div class="order-detail">
-        <div class="order-body">
-          <div>Cliente<span class="field-val">${o.nome}</span></div>
-          <div>Contacto<span class="field-val">${o.contacto || '—'}</span></div>
-          <div>NIF<span class="field-val">${o.nif || '—'}</span></div>
-          <div>Email<span class="field-val">${o.email || '—'}</span></div>
-          <div>Produto<span class="field-val">${o.produto}</span></div>
-          <div>Tamanho<span class="field-val">${o.tamanho || '—'}</span></div>
-          <div style="grid-column:1/-1">Morada<span class="field-val">${[o.morada, [o.cp, o.localidade].filter(Boolean).join(' ')].filter(Boolean).join(', ') || '—'}</span></div>
-          ${o.notas ? `<div style="grid-column:1/-1">Notas<span class="field-val">${o.notas}</span></div>` : ''}
-          ${o.tracking ? `<div style="grid-column:1/-1">Tracking GLS<span class="field-val">${o.tracking}</span></div>` : ''}
-        </div>
-        <div class="status-pills">
-          <span class="s-pill sp-aguarda${o.status === 'aguarda' ? ' sel' : ''}" onclick="pickStatus(${i},this,'aguarda')">Aguarda</span>
-          <span class="s-pill sp-processo${o.status === 'processo' ? ' sel' : ''}" onclick="pickStatus(${i},this,'processo')">Processo</span>
-          <span class="s-pill sp-enviada${o.status === 'enviada' ? ' sel' : ''}" onclick="pickStatus(${i},this,'enviada')">Enviada</span>
-        </div>
-        <div class="tracking-area${o.status === 'enviada' ? ' visible' : ''}">
-          <label>Número de tracking GLS</label>
-          <input type="text" id="tracking-${i}" placeholder="ex: 1Z999AA10123456784" value="${o.tracking || ''}">
-        </div>
-        <div class="order-actions">
-          <button class="btn-save" id="savebtn-${i}" onclick="saveOrder(${i})">Gravar e Sincronizar</button>
-          <button class="btn-del" onclick="deleteOrder(${i})">Apagar</button>
-        </div>
+      <span class="order-date">${o.date}</span>
+      <span class="order-chevron">▶</span>
+    </div>
+    <div class="order-detail">
+      ${o.editing?`<div class="edit-form visible">
+        <div class="form-row"><div class="form-group"><label>Nome</label><input id="e-nome-${idx}" value="${o.nome||''}"></div><div class="form-group"><label>Contacto</label><input id="e-contacto-${idx}" value="${o.contacto||''}"></div></div>
+        <div class="form-row"><div class="form-group"><label>NIF</label><input id="e-nif-${idx}" value="${o.nif||''}"></div><div class="form-group"><label>Email</label><input id="e-email-${idx}" value="${o.email||''}"></div></div>
+        <div class="form-row"><div class="form-group"><label>Produto</label><select id="e-produto-${idx}">${prodOpts.map(p=>`<option${p===o.produto?' selected':''}>${p}</option>`).join('')}</select></div><div class="form-group"><label>Tamanho</label><input id="e-tamanho-${idx}" value="${o.tamanho||''}"></div></div>
+        <div class="form-row"><div class="form-group"><label>Morada</label><input id="e-morada-${idx}" value="${o.morada||''}"></div><div class="form-group"><label>Notas</label><input id="e-notas-${idx}" value="${o.notas||''}"></div></div>
+        <div class="form-row"><div class="form-group"><label>Código Postal</label><input id="e-cp-${idx}" value="${o.cp||''}"></div><div class="form-group"><label>Localidade</label><input id="e-localidade-${idx}" value="${o.localidade||''}"></div></div>
+        <div class="form-row"><div class="form-group"><label>Data prevista entrega</label><input type="date" id="e-entrega-${idx}" value="${o.entrega||''}"></div></div>
+        <div style="display:flex;gap:8px;margin-top:4px"><button class="btn-save" onclick="saveEdit(${idx})">Guardar alterações</button><button class="btn-sm" onclick="toggleEdit(${idx})">Cancelar</button></div>
+      </div>`:`<div class="order-body">
+        <div>Cliente<span class="field-val">${o.nome}</span></div>
+        <div>Contacto<span class="field-val">${o.contacto||'—'}</span></div>
+        <div>NIF<span class="field-val">${o.nif||'—'}</span></div>
+        <div>Email<span class="field-val">${o.email||'—'}</span></div>
+        <div>Produto<span class="field-val">${o.produto}</span></div>
+        <div>Tamanho<span class="field-val">${o.tamanho?'EU '+o.tamanho:'—'}</span></div>
+        <div style="grid-column:1/-1">Morada<span class="field-val">${mf}</span></div>
+        ${o.entrega?`<div>Entrega prevista<span class="field-val">${new Date(o.entrega).toLocaleDateString('pt-PT')}</span></div>`:''}
+        ${o.notas?`<div style="grid-column:1/-1">Notas<span class="field-val">${o.notas}</span></div>`:''}
+        ${o.tracking?`<div style="grid-column:1/-1">Tracking GLS<span class="field-val">${o.tracking}</span></div>`:''}
+        ${o.fatura?`<div>Nº Fatura<span class="field-val">${o.fatura}</span></div>`:''}
+      </div>`}
+      <div class="status-pills">
+        <span class="s-pill sp-material${o.status==='material'?' sel':''}" onclick="pickStatus(${idx},'material')">Aguarda material</span>
+        <span class="s-pill sp-aguarda${o.status==='aguarda'?' sel':''}" onclick="pickStatus(${idx},'aguarda')">Aguarda pagamento</span>
+        <span class="s-pill sp-processo${o.status==='processo'?' sel':''}" onclick="pickStatus(${idx},'processo')">Em processamento</span>
+        <span class="s-pill sp-enviada${o.status==='enviada'?' sel':''}" onclick="pickStatus(${idx},'enviada')">Enviada</span>
+        <span class="s-pill sp-concluida${o.status==='concluida'?' sel':''}" onclick="pickStatus(${idx},'concluida')">✓ Concluída</span>
+      </div>
+      <div class="tracking-area${o.status==='enviada'?' visible':''}">
+        <label>Número de tracking GLS</label>
+        <input type="text" id="tracking-${idx}" placeholder="ex: 1Z999AA10123456784" value="${o.tracking||''}">
+        <label>Número de fatura</label>
+        <input type="text" id="fatura-${idx}" placeholder="ex: FT 2026/42" value="${o.fatura||''}">
+      </div>
+      <div class="order-actions">
+        <button class="btn-save" id="savebtn-${idx}" onclick="saveOrder(${idx})">Gravar</button>
+        <button class="btn-sm" onclick="toggleEdit(${idx})" style="border-color:#93c5fd;color:#1d4ed8">✏️ Editar</button>
+        <button class="btn-pdf" onclick="gerarPDF(${idx})">📄 PDF</button>
+        <button class="btn-del" onclick="event.stopPropagation();deleteOrder(${idx})">Apagar</button>
       </div>
     </div>
-  `).join('');
+  </div>`;
 }
 
-// ── INIT ──
-setBase('lefties');
-loadOrders(); // Agora carrega da nuvem ao iniciar
-// --- FUNÇÕES DE SEGURANÇA (BACKUP) ---
-function exportData() {
-  if (orders.length === 0) { alert("Não há encomendas para exportar."); return; }
-  const dataStr = JSON.stringify(orders, null, 2);
-  const blob = new Blob([dataStr], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `backup_sneakers_${new Date().toISOString().slice(0,10)}.json`;
-  link.click();
+function exportData(){
+  if(!orders.length){alert('Não há encomendas para exportar.');return;}
+  const blob=new Blob([JSON.stringify(orders,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;
+  a.download=`backup_sneakers_${new Date().toISOString().slice(0,10)}.json`;a.click();
 }
-
-function importData() {
-  const input = document.createElement("input");
-  input.type = "file"; input.accept = ".json";
-  input.onchange = e => {
-    const reader = new FileReader();
-    reader.readAsText(e.target.files[0], "UTF-8");
-    reader.onload = ev => {
-      try {
-        const content = JSON.parse(ev.target.result);
-        if (confirm(`Importar ${content.length} encomendas? Isto substituirá a lista atual.`)) {
-          orders = content; renderOrders(); syncDrive();
-          alert("Sincronizado com sucesso!");
-        }
-      } catch (err) { alert("Erro ao ler ficheiro."); }
-    };
-  };
+function importData(){
+  const input=document.createElement('input');input.type='file';input.accept='.json';
+  input.onchange=e=>{const reader=new FileReader();reader.readAsText(e.target.files[0],'UTF-8');
+    reader.onload=ev=>{try{const c=JSON.parse(ev.target.result);if(confirm(`Importar ${c.length} encomendas? Substitui a lista atual.`)){orders=c;renderAll();syncDrive();}}catch(err){alert('Erro ao ler ficheiro.');}};};
   input.click();
 }
 
+setBase('lefties');
+loadOrders();
 </script>
 </body>
 </html>
