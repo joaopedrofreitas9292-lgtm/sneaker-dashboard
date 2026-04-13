@@ -138,6 +138,58 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
   .form-row { grid-template-columns: 1fr; } .order-body { grid-template-columns: 1fr; }
   .order-stats { grid-template-columns: repeat(3,1fr); }
 }
+
+/* stock */
+.stock-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:8px; margin-bottom:1rem; }
+.stock-card { background:#fff; border:0.5px solid #e0dfd8; border-radius:10px; padding:10px 12px; text-align:center; }
+.stock-card.zero { border-color:#fca5a5; background:#fff5f5; }
+.stock-name { font-size:11px; color:#666; margin-bottom:4px; }
+.stock-count { font-size:26px; font-weight:500; }
+.stock-card.zero .stock-count { color:#dc2626; }
+.stock-btns { display:flex; gap:4px; justify-content:center; margin-top:6px; }
+.stock-btn { width:28px; height:28px; border-radius:50%; border:0.5px solid #ccc; background:#f5f5f3; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:500; line-height:1; }
+.stock-btn:hover { background:#eee; }
+
+/* galeria */
+.gallery-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; }
+.gallery-item { background:#fff; border:0.5px solid #e0dfd8; border-radius:10px; overflow:hidden; }
+.gallery-img { width:100%; aspect-ratio:1; object-fit:cover; background:#f5f5f3; display:flex; align-items:center; justify-content:center; color:#ccc; font-size:12px; cursor:pointer; }
+.gallery-img img { width:100%; height:100%; object-fit:cover; }
+.gallery-info { padding:8px 10px; font-size:12px; }
+.gallery-model { font-weight:500; color:#111; }
+.gallery-status { font-size:10px; margin-top:2px; }
+.gallery-status.vendido { color:#15803d; }
+.gallery-status.portfolio { color:#1d4ed8; }
+
+/* templates DM */
+.template-card { background:#f9f8f6; border:0.5px solid #e0dfd8; border-radius:10px; padding:12px 14px; margin-bottom:8px; }
+.template-title { font-size:13px; font-weight:500; margin-bottom:6px; }
+.template-body { font-size:12px; color:#444; line-height:1.6; white-space:pre-wrap; background:#fff; border:0.5px solid #eee; border-radius:7px; padding:10px; margin-bottom:8px; }
+.btn-copy { padding:5px 12px; border-radius:7px; border:0.5px solid #93c5fd; background:#fff; color:#1d4ed8; font-size:11px; cursor:pointer; }
+.btn-copy:hover { background:#dbeafe; }
+.btn-copy.copied { background:#dcfce7; color:#15803d; border-color:#86efac; }
+
+/* calendário */
+.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-top:8px; }
+.cal-header { text-align:center; font-size:10px; color:#888; font-weight:500; padding:4px 0; }
+.cal-day { min-height:36px; border-radius:7px; padding:3px 4px; font-size:11px; background:#fff; border:0.5px solid #f0f0ee; }
+.cal-day.today { border-color:#1d4ed8; background:#dbeafe; }
+.cal-day.has-delivery { background:#dcfce7; border-color:#86efac; }
+.cal-day.has-urgent { background:#fee2e2; border-color:#fca5a5; }
+.cal-day-num { font-weight:500; color:#666; }
+.cal-day.today .cal-day-num { color:#1d4ed8; }
+.cal-dot { font-size:9px; color:#15803d; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.cal-dot.urgent { color:#dc2626; }
+.cal-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.cal-nav-btn { padding:4px 10px; border-radius:7px; border:0.5px solid #ccc; background:#f5f5f3; font-size:12px; cursor:pointer; }
+.cal-nav-title { font-size:14px; font-weight:500; }
+
+/* custo encomenda */
+.cost-box { background:#f5f5f3; border-radius:8px; padding:10px 12px; margin-bottom:10px; font-size:12px; }
+.cost-row { display:flex; justify-content:space-between; padding:3px 0; border-bottom:0.5px solid #eee; }
+.cost-row:last-child { border-bottom:none; font-weight:500; font-size:13px; }
+.cost-row span:first-child { color:#666; }
+.cost-edit { width:80px; padding:3px 6px; border:0.5px solid #ccc; border-radius:5px; font-size:12px; text-align:right; }
 </style>
 </head>
 <body>
@@ -151,6 +203,10 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
     <button class="tab-btn" onclick="showTab('materiais',this)">Materiais</button>
     <button class="tab-btn" onclick="showTab('concorrencia',this)">Concorrência</button>
     <button class="tab-btn" id="tab-enc-btn" onclick="showTab('encomendas',this)">Encomendas</button>
+    <button class="tab-btn" onclick="showTab('stock',this)">Stock</button>
+    <button class="tab-btn" onclick="showTab('galeria',this)">Galeria</button>
+    <button class="tab-btn" onclick="showTab('templates',this)">Mensagens</button>
+    <button class="tab-btn" onclick="showTab('calendario',this)">Calendário</button>
   </div>
 
   <!-- MARGENS -->
@@ -317,6 +373,79 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
       <button class="btn-sm" onclick="importData()">📥 Importar backup</button>
     </div>
   </div>
+  <!-- STOCK -->
+  <div id="tab-stock" class="tab-panel">
+    <div class="card">
+      <div class="card-title">Stock em armazém</div>
+      <div class="card-sub">Clica + / − para atualizar. Vermelho = sem stock.</div>
+      <div class="stock-grid" id="stock-grid"></div>
+      <div style="font-size:11px;color:#aaa;margin-top:4px">Stock guardado localmente neste dispositivo.</div>
+    </div>
+  </div>
+
+  <!-- GALERIA -->
+  <div id="tab-galeria" class="tab-panel">
+    <div class="card">
+      <div class="card-title">Galeria de trabalhos</div>
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+        <button class="btn-primary" onclick="addGalleryItem()">+ Adicionar par</button>
+        <select id="g-filter" onchange="renderGallery()" style="padding:6px 10px;border:0.5px solid #ccc;border-radius:8px;font-size:12px;background:#fff">
+          <option value="all">Todos</option>
+          <option value="portfolio">Portfólio</option>
+          <option value="vendido">Vendidos</option>
+        </select>
+      </div>
+      <div class="gallery-grid" id="gallery-grid"></div>
+    </div>
+    <div id="gallery-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center">
+      <div style="background:#fff;border-radius:12px;padding:20px;max-width:400px;width:90%;max-height:90vh;overflow-y:auto">
+        <div class="card-title" id="gm-title">Adicionar par</div>
+        <div class="form-group" style="margin-bottom:8px"><label style="font-size:11px;color:#666;display:block;margin-bottom:3px">Modelo</label><input id="gm-modelo" type="text" style="width:100%;padding:6px 9px;border:0.5px solid #ccc;border-radius:7px;font-size:12px" placeholder="ex: Nike AF1 Adulto"></div>
+        <div class="form-group" style="margin-bottom:8px"><label style="font-size:11px;color:#666;display:block;margin-bottom:3px">Descrição / notas</label><input id="gm-desc" type="text" style="width:100%;padding:6px 9px;border:0.5px solid #ccc;border-radius:7px;font-size:12px" placeholder="ex: Design M-Power azul/vermelho"></div>
+        <div class="form-group" style="margin-bottom:8px">
+          <label style="font-size:11px;color:#666;display:block;margin-bottom:3px">Estado</label>
+          <select id="gm-status" style="width:100%;padding:6px 9px;border:0.5px solid #ccc;border-radius:7px;font-size:12px;background:#fff">
+            <option value="portfolio">Portfólio</option>
+            <option value="vendido">Vendido</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:12px"><label style="font-size:11px;color:#666;display:block;margin-bottom:3px">Foto (opcional)</label><input id="gm-foto" type="file" accept="image/*" style="font-size:12px"></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-primary" onclick="saveGalleryItem()">Guardar</button>
+          <button class="btn-sm" onclick="closeGalleryModal()">Cancelar</button>
+          <button class="btn-del" id="gm-del-btn" style="display:none" onclick="deleteGalleryItem()">Apagar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEMPLATES -->
+  <div id="tab-templates" class="tab-panel">
+    <div class="card">
+      <div class="card-title">Templates de mensagem DM</div>
+      <div class="card-sub">Clica em "Copiar" e personaliza antes de enviar.</div>
+      <div id="templates-list"></div>
+    </div>
+  </div>
+
+  <!-- CALENDÁRIO -->
+  <div id="tab-calendario" class="tab-panel">
+    <div class="card">
+      <div class="card-title">Calendário de envios</div>
+      <div class="cal-nav">
+        <button class="cal-nav-btn" onclick="calPrev()">← Anterior</button>
+        <span class="cal-nav-title" id="cal-title"></span>
+        <button class="cal-nav-btn" onclick="calNext()">Próximo →</button>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+      <div style="display:flex;gap:12px;margin-top:10px;font-size:11px;color:#666;flex-wrap:wrap">
+        <span><span style="display:inline-block;width:10px;height:10px;background:#dcfce7;border:0.5px solid #86efac;border-radius:2px;margin-right:4px"></span>Envio previsto</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#fee2e2;border:0.5px solid #fca5a5;border-radius:2px;margin-right:4px"></span>Atrasado / urgente (≤3 dias)</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#dbeafe;border:0.5px solid #93c5fd;border-radius:2px;margin-right:4px"></span>Hoje</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -334,7 +463,7 @@ const bases={
     tiers:[{label:'135€',preco:135,tierLabel:'Premium · Grand Court TD',pill:'rec'},{label:'160€',preco:160,tierLabel:'Premium alto · Grand Court TD',pill:'prem'}]},
   af1:{shortName:'Nike AF1 · couro genuíno',info:'<strong>Nike Air Force 1</strong> · Adulto ~110€ · Criança 69,99€ · Bebé 59,90€ c/IVA · Couro genuíno.',promoNote:'',link:'https://www.nike.com/pt/t/sapatilhas-air-force-1-07-ojDkV4tL/CW2288-111',linkLabel:'Ver AF1 Adulto na Nike',costComIva:110,
     tiers:[{label:'195€ · adulto',preco:195,tierLabel:'AF1 Adulto · entrada',pill:'rec',cost:110},{label:'215€ · adulto',preco:215,tierLabel:'AF1 Adulto · premium',pill:'prem',cost:110},{label:'155€ · criança',preco:155,tierLabel:'AF1 Criança 28–34',pill:'child',cost:69.99},{label:'145€ · bebé',preco:145,tierLabel:'AF1 Bebé 20–27',pill:'baby',cost:59.90}]},
-  chinelos:{shortName:'Nike Benassi JDI · chinelos',info:'<strong>Nike Benassi JDI</strong> · Chinelos clássicos Nike, base para customização. Preço de compra a verificar.',promoNote:'',link:'https://www.nike.com/pt/t/chinelos-benassi-jdi-2KTrDBAW/343880-100',linkLabel:'Ver na Nike',costComIva:30,
+  chinelos:{shortName:'Nike Benassi JDI · chinelos',info:'<strong>Nike Benassi JDI</strong> · Chinelos clássicos Nike, base para customização. Preço de compra a verificar.',promoNote:'',link:'https://www.nike.com/pt/t/chinelos-benassi-jdi-2KTrDBAW/343880-100',linkLabel:'Ver na Nike',costComIva:39.99,
     tiers:[{label:'115€ · custom',preco:115,tierLabel:'Chinelos Benassi JDI custom',pill:'rec'}]}
 };
 const pillL={rec:'Recomendado',prem:'Premium',child:'Criança',baby:'Bebé'};
@@ -431,7 +560,7 @@ function addOrder(){
     tamanho:document.getElementById('f-tamanho').value.trim(),morada:document.getElementById('f-morada').value.trim(),
     cp:document.getElementById('f-cp').value.trim(),localidade:document.getElementById('f-localidade').value.trim(),
     notas:document.getElementById('f-notas').value.trim(),entrega:defaultEntrega,
-    status:'aguarda',tracking:'',fatura:'',open:false,editing:false});
+    status:'aguarda',tracking:'',fatura:'',open:false,editing:false,custo_base:''});
   syncDrive();renderAll();
   ['f-nome','f-contacto','f-nif','f-email','f-tamanho','f-morada','f-cp','f-localidade','f-notas','f-entrega'].forEach(f=>document.getElementById(f).value='');
 }
@@ -590,6 +719,7 @@ function renderCard(o,idx){
         ${o.tracking?`<div style="grid-column:1/-1">Tracking GLS<span class="field-val">${o.tracking}</span></div>`:''}
         ${o.fatura?`<div>Nº Fatura<span class="field-val">${o.fatura}</span></div>`:''}
       </div>`}
+      ${renderCostBox(o,idx)}
       <div class="status-pills">
         <span class="s-pill sp-material${o.status==='material'?' sel':''}" onclick="pickStatus(${idx},'material')">Aguarda material</span>
         <span class="s-pill sp-aguarda${o.status==='aguarda'?' sel':''}" onclick="pickStatus(${idx},'aguarda')">Aguarda pagamento</span>
@@ -628,6 +758,290 @@ function importData(){
 
 setBase('lefties');
 loadOrders();
+renderStock();
+renderGallery();
+renderTemplates();
+renderCal();
+
+// ── STOCK ──────────────────────────────────────────────────────────
+const STOCK_ITEMS = [
+  'Lefties Casual','Adidas Grand Court TD',
+  'Nike AF1 Adulto','Nike AF1 Criança','Nike AF1 Bebé','Nike Benassi JDI'
+];
+let stock = JSON.parse(localStorage.getItem('snkr_stock') || '{}');
+STOCK_ITEMS.forEach(k=>{ if(stock[k]===undefined) stock[k]=0; });
+
+function saveStock(){ localStorage.setItem('snkr_stock', JSON.stringify(stock)); }
+
+function stockChange(key, delta){
+  stock[key] = Math.max(0, (stock[key]||0) + delta);
+  saveStock(); renderStock();
+}
+
+function renderStock(){
+  document.getElementById('stock-grid').innerHTML = STOCK_ITEMS.map(k=>{
+    const n = stock[k]||0;
+    return `<div class="stock-card${n===0?' zero':''}">
+      <div class="stock-name">${k}</div>
+      <div class="stock-count">${n}</div>
+      <div class="stock-btns">
+        <button class="stock-btn" onclick="stockChange('${k}',-1)">−</button>
+        <button class="stock-btn" onclick="stockChange('${k}',1)">+</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── GALERIA ────────────────────────────────────────────────────────
+let gallery = JSON.parse(localStorage.getItem('snkr_gallery') || '[]');
+let editingGalleryIdx = null;
+
+function saveGallery(){ localStorage.setItem('snkr_gallery', JSON.stringify(gallery)); }
+
+function addGalleryItem(){
+  editingGalleryIdx = null;
+  document.getElementById('gm-title').textContent = 'Adicionar par';
+  document.getElementById('gm-modelo').value = '';
+  document.getElementById('gm-desc').value = '';
+  document.getElementById('gm-status').value = 'portfolio';
+  document.getElementById('gm-foto').value = '';
+  document.getElementById('gm-del-btn').style.display = 'none';
+  const m = document.getElementById('gallery-modal');
+  m.style.display = 'flex';
+}
+
+function editGalleryItem(idx){
+  editingGalleryIdx = idx;
+  const g = gallery[idx];
+  document.getElementById('gm-title').textContent = 'Editar par';
+  document.getElementById('gm-modelo').value = g.modelo||'';
+  document.getElementById('gm-desc').value = g.desc||'';
+  document.getElementById('gm-status').value = g.status||'portfolio';
+  document.getElementById('gm-foto').value = '';
+  document.getElementById('gm-del-btn').style.display = 'inline-block';
+  document.getElementById('gallery-modal').style.display = 'flex';
+}
+
+function closeGalleryModal(){
+  document.getElementById('gallery-modal').style.display = 'none';
+}
+
+function saveGalleryItem(){
+  const modelo = document.getElementById('gm-modelo').value.trim();
+  if(!modelo){ alert('Modelo é obrigatório.'); return; }
+  const fileInput = document.getElementById('gm-foto');
+  const file = fileInput.files[0];
+  const doSave = (foto) => {
+    const item = {
+      modelo, desc: document.getElementById('gm-desc').value.trim(),
+      status: document.getElementById('gm-status').value,
+      foto: foto || (editingGalleryIdx !== null ? gallery[editingGalleryIdx].foto : ''),
+      date: editingGalleryIdx !== null ? gallery[editingGalleryIdx].date : new Date().toLocaleDateString('pt-PT')
+    };
+    if(editingGalleryIdx !== null) gallery[editingGalleryIdx] = item;
+    else gallery.unshift(item);
+    saveGallery(); closeGalleryModal(); renderGallery();
+  };
+  if(file){
+    const reader = new FileReader();
+    reader.onload = e => doSave(e.target.result);
+    reader.readAsDataURL(file);
+  } else { doSave(null); }
+}
+
+function deleteGalleryItem(){
+  if(!confirm('Apagar este item da galeria?')) return;
+  gallery.splice(editingGalleryIdx, 1);
+  saveGallery(); closeGalleryModal(); renderGallery();
+}
+
+function renderGallery(){
+  const filter = document.getElementById('g-filter')?.value || 'all';
+  const filtered = filter === 'all' ? gallery : gallery.filter(g => g.status === filter);
+  const el = document.getElementById('gallery-grid');
+  if(!el) return;
+  if(!filtered.length){ el.innerHTML = '<div style="color:#aaa;font-size:13px;padding:1rem">Nenhum item ainda. Clica em "+ Adicionar par".</div>'; return; }
+  el.innerHTML = filtered.map((g,i)=>{
+    const idx = gallery.indexOf(g);
+    return `<div class="gallery-item">
+      <div class="gallery-img" onclick="editGalleryItem(${idx})">
+        ${g.foto ? `<img src="${g.foto}" alt="${g.modelo}">` : '<span>Sem foto<br>Clica para editar</span>'}
+      </div>
+      <div class="gallery-info">
+        <div class="gallery-model">${g.modelo}</div>
+        ${g.desc ? `<div style="font-size:11px;color:#888;margin-top:2px">${g.desc}</div>` : ''}
+        <div class="gallery-status ${g.status}">${g.status === 'vendido' ? '✓ Vendido' : '◆ Portfólio'}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── TEMPLATES ──────────────────────────────────────────────────────
+const TEMPLATES = [
+  { title: '✅ Confirmação de encomenda',
+    body: `Olá [NOME]! 👋
+
+A tua encomenda foi confirmada com sucesso!
+
+📦 Produto: [PRODUTO]
+👟 Tamanho: EU [TAMANHO]
+💰 Total: [VALOR]€
+
+Assim que estiver pronta aviso-te com todos os detalhes de envio. Qualquer dúvida estou aqui! 🙌` },
+  { title: '📦 Encomenda enviada + Tracking',
+    body: `Olá [NOME]! 🎉
+
+Os teus [PRODUTO] foram enviados hoje!
+
+🚚 Transportadora: GLS
+🔍 Tracking: [TRACKING]
+📅 Entrega prevista: 1–3 dias úteis
+
+Podes acompanhar aqui: https://gls-group.com/PT/pt/seguimento-de-envios
+
+Obrigado pela confiança! 🙏` },
+  { title: '⭐ Pedido de review',
+    body: `Olá [NOME]! 😊
+
+Espero que os teus [PRODUTO] tenham chegado bem e estejas a adorar!
+
+Se quiseres, podes partilhar uma foto e taggear-nos — adoro ver o resultado final nos clientes 📸
+
+Volta sempre! 👟✨` },
+  { title: '⏳ Aviso de atraso',
+    body: `Olá [NOME]!
+
+Queria avisar-te que a tua encomenda ([PRODUTO]) vai ter um pequeno atraso de [X] dias.
+
+Estou a dar o máximo para entregar o melhor resultado possível. Obrigado pela paciência! 🙏
+
+Qualquer dúvida estou disponível.` },
+  { title: '📩 Resposta a pedido de orçamento',
+    body: `Olá! 👋
+
+Obrigado pelo interesse!
+
+O valor para customização de [PRODUTO] é [VALOR]€, com envio incluído (CTT / GLS).
+
+O prazo de entrega é aproximadamente [PRAZO] dias após confirmação e pagamento.
+
+Para prosseguir precisarei:
+• Tamanho
+• Morada completa
+• NIF (para fatura)
+
+Qualquer questão estou aqui! 🙌` },
+];
+
+function copyTemplate(idx){
+  const t = TEMPLATES[idx];
+  navigator.clipboard.writeText(t.body).then(()=>{
+    const btn = document.getElementById('copy-btn-'+idx);
+    btn.textContent = 'Copiado ✓'; btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function renderTemplates(){
+  const el = document.getElementById('templates-list');
+  if(!el) return;
+  el.innerHTML = TEMPLATES.map((t,i)=>`
+    <div class="template-card">
+      <div class="template-title">${t.title}</div>
+      <div class="template-body">${t.body}</div>
+      <button class="btn-copy" id="copy-btn-${i}" onclick="copyTemplate(${i})">Copiar</button>
+    </div>`).join('');
+}
+
+// ── CALENDÁRIO ─────────────────────────────────────────────────────
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+const PT_MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const PT_DAYS = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+
+function calPrev(){ calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCal(); }
+function calNext(){ calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCal(); }
+
+function renderCal(){
+  const el = document.getElementById('cal-grid');
+  const title = document.getElementById('cal-title');
+  if(!el) return;
+  title.textContent = PT_MONTHS[calMonth] + ' ' + calYear;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+
+  // Mapa de entregas
+  const deliveries = {};
+  orders.filter(o=>o.entrega&&o.status!=='concluida').forEach(o=>{
+    const d = new Date(o.entrega); d.setHours(0,0,0,0);
+    if(d.getFullYear()===calYear && d.getMonth()===calMonth){
+      const key = d.getDate();
+      if(!deliveries[key]) deliveries[key]=[];
+      const diff = Math.ceil((d-today)/(1000*60*60*24));
+      deliveries[key].push({nome:o.nome, urgent: diff<=3});
+    }
+  });
+
+  let html = PT_DAYS.map(d=>`<div class="cal-header">${d}</div>`).join('');
+  for(let i=0;i<firstDay;i++) html += '<div></div>';
+  for(let d=1;d<=daysInMonth;d++){
+    const date = new Date(calYear,calMonth,d); date.setHours(0,0,0,0);
+    const isToday = date.getTime()===today.getTime();
+    const dels = deliveries[d]||[];
+    const hasUrgent = dels.some(x=>x.urgent);
+    let cls = 'cal-day';
+    if(isToday) cls+=' today';
+    else if(dels.length && hasUrgent) cls+=' has-urgent';
+    else if(dels.length) cls+=' has-delivery';
+    html += `<div class="${cls}"><div class="cal-day-num">${d}</div>`;
+    dels.slice(0,2).forEach(x=>{ html+=`<div class="cal-dot${x.urgent?' urgent':''}">${x.nome.split(' ')[0]}</div>`; });
+    if(dels.length>2) html+=`<div class="cal-dot">+${dels.length-2}</div>`;
+    html += '</div>';
+  }
+  el.innerHTML = html;
+}
+
+// ── CUSTO ENCOMENDA (caixa dentro da encomenda) ────────────────────
+function getCustoBase(produto){
+  const prices = {
+    'Lefties Casual · 79€': 17.99, 'Lefties Ed. Limitada · 95€': 17.99,
+    'Adidas Grand Court TD · 135€': 65, 'Adidas Grand Court TD · 160€': 65,
+    'Nike AF1 Adulto · 195€': 110, 'Nike AF1 Adulto · 215€': 110,
+    'Nike AF1 Criança (28–34) · 155€': 69.99, 'Nike AF1 Bebé (20–27) · 145€': 59.90,
+    'Nike Benassi JDI Custom · 115€': 39.99
+  };
+  return prices[produto] || 0;
+}
+
+function fmtE(v){ return (Math.round(v*100)/100).toFixed(2).replace('.',',')+' €'; }
+
+function renderCostBox(o, idx){
+  const basePadrao = getCustoBase(o.produto);
+  const baseReal = parseFloat(o.custo_base) || basePadrao;
+  const mat = 6.50 / 1.23;
+  const custos = baseReal/1.23 + mat;
+  const pvpSiva = extractPrice(o.produto) / 1.23;
+  const margem = pvpSiva - custos;
+  const pct = Math.round(margem/pvpSiva*100);
+  return `<div class="cost-box">
+    <div style="font-size:11px;font-weight:500;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Custo desta encomenda</div>
+    <div class="cost-row"><span>Base sapatilha c/ IVA</span>
+      <input class="cost-edit" type="number" step="0.01" id="cost-${idx}" value="${baseReal.toFixed(2)}" 
+        title="Valor padrão: ${basePadrao.toFixed(2)}€ — podes alterar se compraste em promoção"
+        onchange="updateCost(${idx},this.value)" style="width:90px">
+    </div>
+    <div class="cost-row"><span>Materiais Angelus</span><span>${fmtE(mat)}</span></div>
+    <div class="cost-row"><span>Receita s/ IVA</span><span>${fmtE(pvpSiva)}</span></div>
+    <div class="cost-row" style="color:${margem>=0?'#15803d':'#dc2626'}"><span>Margem líquida</span><span>${fmtE(margem)} (~${pct}%)</span></div>
+  </div>`;
+}
+
+function updateCost(idx, val){
+  orders[idx].custo_base = val;
+  // Não chamar syncDrive aqui — só ao Gravar
+}
+
 </script>
 </body>
 </html>
