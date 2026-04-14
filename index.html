@@ -9,8 +9,9 @@
 body { background: #f5f5f3; color: #1a1a1a; padding: 1rem; font-size: 14px; }
 .dash { max-width: 900px; margin: 0 auto; }
 h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 12px; }
-.tab-nav { display: flex; gap: 4px; margin-bottom: 1.2rem; background: #eeedea; border-radius: 10px; padding: 4px; }
-.tab-btn { flex: 1; padding: 8px; border: none; background: transparent; border-radius: 7px; font-size: 12px; font-weight: 500; color: #666; cursor: pointer; transition: all .15s; position: relative; }
+.tab-nav { display: flex; gap: 4px; margin-bottom: 1.2rem; background: #eeedea; border-radius: 10px; padding: 4px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.tab-nav::-webkit-scrollbar { display: none; }
+.tab-btn { flex: 0 0 auto; padding: 8px 12px; border: none; background: transparent; border-radius: 7px; font-size: 12px; font-weight: 500; color: #666; cursor: pointer; transition: all .15s; position: relative; white-space: nowrap; touch-action: manipulation; }
 .tab-btn.active { background: #fff; color: #111; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
 .tab-badge { position: absolute; top: 2px; right: 4px; background: #dc2626; color: #fff; border-radius: 99px; font-size: 9px; font-weight: 700; padding: 1px 5px; }
 .tab-panel { display: none; } .tab-panel.active { display: block; }
@@ -140,15 +141,15 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
 }
 
 /* stock */
-.stock-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:8px; margin-bottom:1rem; }
-.stock-card { background:#fff; border:0.5px solid #e0dfd8; border-radius:10px; padding:10px 12px; text-align:center; }
+.stock-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; margin-bottom:1rem; }
+.stock-card { background:#fff; border:0.5px solid #e0dfd8; border-radius:10px; padding:14px 12px; text-align:center; }
 .stock-card.zero { border-color:#fca5a5; background:#fff5f5; }
 .stock-name { font-size:11px; color:#666; margin-bottom:4px; }
-.stock-count { font-size:26px; font-weight:500; }
+.stock-count { font-size:32px; font-weight:500; margin:4px 0; }
 .stock-card.zero .stock-count { color:#dc2626; }
 .stock-btns { display:flex; gap:4px; justify-content:center; margin-top:6px; }
-.stock-btn { width:28px; height:28px; border-radius:50%; border:0.5px solid #ccc; background:#f5f5f3; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:500; line-height:1; }
-.stock-btn:hover { background:#eee; }
+.stock-btn { width:44px; height:44px; border-radius:50%; border:0.5px solid #ccc; background:#f5f5f3; font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:500; line-height:1; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+.stock-btn:active { background:#ddd; transform:scale(0.95); }
 
 /* galeria */
 .gallery-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; }
@@ -162,11 +163,11 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
 .gallery-status.portfolio { color:#1d4ed8; }
 
 /* templates DM */
-.template-card { background:#f9f8f6; border:0.5px solid #e0dfd8; border-radius:10px; padding:12px 14px; margin-bottom:8px; }
-.template-title { font-size:13px; font-weight:500; margin-bottom:6px; }
-.template-body { font-size:12px; color:#444; line-height:1.6; white-space:pre-wrap; background:#fff; border:0.5px solid #eee; border-radius:7px; padding:10px; margin-bottom:8px; }
-.btn-copy { padding:5px 12px; border-radius:7px; border:0.5px solid #93c5fd; background:#fff; color:#1d4ed8; font-size:11px; cursor:pointer; }
-.btn-copy:hover { background:#dbeafe; }
+.template-card { background:#f9f8f6; border:0.5px solid #e0dfd8; border-radius:10px; padding:14px; margin-bottom:10px; }
+.template-title { font-size:14px; font-weight:500; margin-bottom:8px; }
+.template-body { font-size:13px; color:#444; line-height:1.7; white-space:pre-wrap; background:#fff; border:0.5px solid #eee; border-radius:7px; padding:12px; margin-bottom:10px; }
+.btn-copy { padding:10px 18px; border-radius:8px; border:0.5px solid #93c5fd; background:#fff; color:#1d4ed8; font-size:13px; font-weight:500; cursor:pointer; touch-action:manipulation; -webkit-tap-highlight-color:transparent; display:inline-block; }
+.btn-copy:active { background:#dbeafe; transform:scale(0.97); }
 .btn-copy.copied { background:#dcfce7; color:#15803d; border-color:#86efac; }
 
 /* calendário */
@@ -388,7 +389,7 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
     <div class="card">
       <div class="card-title">Galeria de trabalhos</div>
       <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
-        <button class="btn-primary" onclick="addGalleryItem()">+ Adicionar par</button>
+        <button class="btn-primary" style="padding:10px 20px;font-size:14px" onclick="addGalleryItem()">+ Adicionar par</button>
         <select id="g-filter" onchange="renderGallery()" style="padding:6px 10px;border:0.5px solid #ccc;border-radius:8px;font-size:12px;background:#fff">
           <option value="all">Todos</option>
           <option value="portfolio">Portfólio</option>
