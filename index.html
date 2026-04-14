@@ -386,37 +386,39 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
 
   <!-- GALERIA -->
   <div id="tab-galeria" class="tab-panel">
+    <!-- Formulário inline (oculto por padrão) -->
+    <div class="card" id="gallery-form-card" style="display:none">
+      <div class="card-title" id="gm-title">Adicionar par</div>
+      <div class="form-row">
+        <div class="form-group"><label>Modelo</label><input id="gm-modelo" type="text" placeholder="ex: Nike AF1 Adulto"></div>
+        <div class="form-group"><label>Estado</label>
+          <select id="gm-status">
+            <option value="portfolio">Portfólio</option>
+            <option value="vendido">Vendido</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Descrição / notas</label><input id="gm-desc" type="text" placeholder="ex: Design M-Power azul/vermelho"></div>
+        <div class="form-group"><label>Foto</label><input id="gm-foto" type="file" accept="image/*" style="padding:4px 0;font-size:12px"></div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+        <button class="btn-primary" onclick="saveGalleryItem()">Guardar</button>
+        <button class="btn-sm" onclick="closeGalleryModal()">Cancelar</button>
+        <button class="btn-del" id="gm-del-btn" style="display:none" onclick="deleteGalleryItem()">Apagar</button>
+      </div>
+    </div>
     <div class="card">
       <div class="card-title">Galeria de trabalhos</div>
-      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
-        <button class="btn-primary" style="padding:10px 20px;font-size:14px" onclick="addGalleryItem()">+ Adicionar par</button>
-        <select id="g-filter" onchange="renderGallery()" style="padding:6px 10px;border:0.5px solid #ccc;border-radius:8px;font-size:12px;background:#fff">
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
+        <button class="btn-primary" onclick="addGalleryItem()">+ Adicionar par</button>
+        <select id="g-filter" onchange="renderGallery()" style="padding:8px 10px;border:0.5px solid #ccc;border-radius:8px;font-size:13px;background:#fff">
           <option value="all">Todos</option>
           <option value="portfolio">Portfólio</option>
           <option value="vendido">Vendidos</option>
         </select>
       </div>
       <div class="gallery-grid" id="gallery-grid"></div>
-    </div>
-    <div id="gallery-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center">
-      <div style="background:#fff;border-radius:12px;padding:20px;max-width:400px;width:90%;max-height:90vh;overflow-y:auto">
-        <div class="card-title" id="gm-title">Adicionar par</div>
-        <div class="form-group" style="margin-bottom:8px"><label style="font-size:11px;color:#666;display:block;margin-bottom:3px">Modelo</label><input id="gm-modelo" type="text" style="width:100%;padding:6px 9px;border:0.5px solid #ccc;border-radius:7px;font-size:12px" placeholder="ex: Nike AF1 Adulto"></div>
-        <div class="form-group" style="margin-bottom:8px"><label style="font-size:11px;color:#666;display:block;margin-bottom:3px">Descrição / notas</label><input id="gm-desc" type="text" style="width:100%;padding:6px 9px;border:0.5px solid #ccc;border-radius:7px;font-size:12px" placeholder="ex: Design M-Power azul/vermelho"></div>
-        <div class="form-group" style="margin-bottom:8px">
-          <label style="font-size:11px;color:#666;display:block;margin-bottom:3px">Estado</label>
-          <select id="gm-status" style="width:100%;padding:6px 9px;border:0.5px solid #ccc;border-radius:7px;font-size:12px;background:#fff">
-            <option value="portfolio">Portfólio</option>
-            <option value="vendido">Vendido</option>
-          </select>
-        </div>
-        <div class="form-group" style="margin-bottom:12px"><label style="font-size:11px;color:#666;display:block;margin-bottom:3px">Foto (opcional)</label><input id="gm-foto" type="file" accept="image/*" style="font-size:12px"></div>
-        <div style="display:flex;gap:8px">
-          <button class="btn-primary" onclick="saveGalleryItem()">Guardar</button>
-          <button class="btn-sm" onclick="closeGalleryModal()">Cancelar</button>
-          <button class="btn-del" id="gm-del-btn" style="display:none" onclick="deleteGalleryItem()">Apagar</button>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -780,14 +782,14 @@ function stockChange(key, delta){
 }
 
 function renderStock(){
-  document.getElementById('stock-grid').innerHTML = STOCK_ITEMS.map(k=>{
+  document.getElementById('stock-grid').innerHTML = STOCK_ITEMS.map((k,i)=>{
     const n = stock[k]||0;
     return `<div class="stock-card${n===0?' zero':''}">
       <div class="stock-name">${k}</div>
-      <div class="stock-count">${n}</div>
+      <div class="stock-count" id="sc-${i}">${n}</div>
       <div class="stock-btns">
-        <button class="stock-btn" onclick="stockChange('${k}',-1)">−</button>
-        <button class="stock-btn" onclick="stockChange('${k}',1)">+</button>
+        <button class="stock-btn" data-key="${k}" data-delta="-1" ontouchstart="" onclick="stockChange('${k}',-1)">−</button>
+        <button class="stock-btn" data-key="${k}" data-delta="1"  ontouchstart="" onclick="stockChange('${k}',1)">+</button>
       </div>
     </div>`;
   }).join('');
@@ -807,8 +809,8 @@ function addGalleryItem(){
   document.getElementById('gm-status').value = 'portfolio';
   document.getElementById('gm-foto').value = '';
   document.getElementById('gm-del-btn').style.display = 'none';
-  const m = document.getElementById('gallery-modal');
-  m.style.display = 'flex';
+  document.getElementById('gallery-form-card').style.display = 'block';
+  document.getElementById('gallery-form-card').scrollIntoView({behavior:'smooth'});
 }
 
 function editGalleryItem(idx){
@@ -820,11 +822,12 @@ function editGalleryItem(idx){
   document.getElementById('gm-status').value = g.status||'portfolio';
   document.getElementById('gm-foto').value = '';
   document.getElementById('gm-del-btn').style.display = 'inline-block';
-  document.getElementById('gallery-modal').style.display = 'flex';
+  document.getElementById('gallery-form-card').style.display = 'block';
+  document.getElementById('gallery-form-card').scrollIntoView({behavior:'smooth'});
 }
 
 function closeGalleryModal(){
-  document.getElementById('gallery-modal').style.display = 'none';
+  document.getElementById('gallery-form-card').style.display = 'none';
 }
 
 function saveGalleryItem(){
