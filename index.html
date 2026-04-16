@@ -140,35 +140,6 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
   .order-stats { grid-template-columns: repeat(3,1fr); }
 }
 
-/* stock */
-.stock-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; margin-bottom:1rem; }
-.stock-card { background:#fff; border:0.5px solid #e0dfd8; border-radius:10px; padding:14px 12px; text-align:center; }
-.stock-card.zero { border-color:#fca5a5; background:#fff5f5; }
-.stock-name { font-size:11px; color:#666; margin-bottom:4px; }
-.stock-count { font-size:32px; font-weight:500; margin:4px 0; }
-.stock-card.zero .stock-count { color:#dc2626; }
-.stock-btns { display:flex; gap:4px; justify-content:center; margin-top:6px; }
-.stock-btn { width:44px; height:44px; border-radius:50%; border:0.5px solid #ccc; background:#f5f5f3; font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:500; line-height:1; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
-.stock-btn:active { background:#ddd; transform:scale(0.95); }
-
-/* galeria */
-.gallery-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; }
-.gallery-item { background:#fff; border:0.5px solid #e0dfd8; border-radius:10px; overflow:hidden; }
-.gallery-img { width:100%; aspect-ratio:1; object-fit:cover; background:#f5f5f3; display:flex; align-items:center; justify-content:center; color:#ccc; font-size:12px; cursor:pointer; }
-.gallery-img img { width:100%; height:100%; object-fit:cover; }
-.gallery-info { padding:8px 10px; font-size:12px; }
-.gallery-model { font-weight:500; color:#111; }
-.gallery-status { font-size:10px; margin-top:2px; }
-.gallery-status.vendido { color:#15803d; }
-.gallery-status.portfolio { color:#1d4ed8; }
-
-/* templates DM */
-.template-card { background:#f9f8f6; border:0.5px solid #e0dfd8; border-radius:10px; padding:14px; margin-bottom:10px; }
-.template-title { font-size:14px; font-weight:500; margin-bottom:8px; }
-.template-body { font-size:13px; color:#444; line-height:1.7; white-space:pre-wrap; background:#fff; border:0.5px solid #eee; border-radius:7px; padding:12px; margin-bottom:10px; }
-.btn-copy { padding:10px 18px; border-radius:8px; border:0.5px solid #93c5fd; background:#fff; color:#1d4ed8; font-size:13px; font-weight:500; cursor:pointer; touch-action:manipulation; -webkit-tap-highlight-color:transparent; display:inline-block; }
-.btn-copy:active { background:#dbeafe; transform:scale(0.97); }
-.btn-copy.copied { background:#dcfce7; color:#15803d; border-color:#86efac; }
 
 /* calendário */
 .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-top:8px; }
@@ -204,9 +175,6 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
     <button class="tab-btn" onclick="showTab('materiais',this)">Materiais</button>
     <button class="tab-btn" onclick="showTab('concorrencia',this)">Concorrência</button>
     <button class="tab-btn" id="tab-enc-btn" onclick="showTab('encomendas',this)">Encomendas</button>
-    <button class="tab-btn" onclick="showTab('stock',this)">Stock</button>
-    <button class="tab-btn" onclick="showTab('galeria',this)">Galeria</button>
-    <button class="tab-btn" onclick="showTab('templates',this)">Mensagens</button>
     <button class="tab-btn" onclick="showTab('calendario',this)">Calendário</button>
   </div>
 
@@ -373,65 +341,7 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
       <button class="btn-sm" onclick="exportData()">📤 Exportar backup</button>
       <button class="btn-sm" onclick="importData()">📥 Importar backup</button>
     </div>
-  </div>
-  <!-- STOCK -->
-  <div id="tab-stock" class="tab-panel">
-    <div class="card">
-      <div class="card-title">Stock em armazém</div>
-      <div class="card-sub">Clica + / − para atualizar. Vermelho = sem stock.</div>
-      <div class="stock-grid" id="stock-grid"></div>
-      <div style="font-size:11px;color:#aaa;margin-top:4px">Stock guardado localmente neste dispositivo.</div>
-    </div>
-  </div>
-
-  <!-- GALERIA -->
-  <div id="tab-galeria" class="tab-panel">
-    <!-- Formulário inline (oculto por padrão) -->
-    <div class="card" id="gallery-form-card" style="display:none">
-      <div class="card-title" id="gm-title">Adicionar par</div>
-      <div class="form-row">
-        <div class="form-group"><label>Modelo</label><input id="gm-modelo" type="text" placeholder="ex: Nike AF1 Adulto"></div>
-        <div class="form-group"><label>Estado</label>
-          <select id="gm-status">
-            <option value="portfolio">Portfólio</option>
-            <option value="vendido">Vendido</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Descrição / notas</label><input id="gm-desc" type="text" placeholder="ex: Design M-Power azul/vermelho"></div>
-        <div class="form-group"><label>Foto</label><input id="gm-foto" type="file" accept="image/*" style="padding:4px 0;font-size:12px"></div>
-      </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
-        <button class="btn-primary" onclick="saveGalleryItem()">Guardar</button>
-        <button class="btn-sm" onclick="closeGalleryModal()">Cancelar</button>
-        <button class="btn-del" id="gm-del-btn" style="display:none" onclick="deleteGalleryItem()">Apagar</button>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Galeria de trabalhos</div>
-      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
-        <button class="btn-primary" onclick="addGalleryItem()">+ Adicionar par</button>
-        <select id="g-filter" onchange="renderGallery()" style="padding:8px 10px;border:0.5px solid #ccc;border-radius:8px;font-size:13px;background:#fff">
-          <option value="all">Todos</option>
-          <option value="portfolio">Portfólio</option>
-          <option value="vendido">Vendidos</option>
-        </select>
-      </div>
-      <div class="gallery-grid" id="gallery-grid"></div>
-    </div>
-  </div>
-
-  <!-- TEMPLATES -->
-  <div id="tab-templates" class="tab-panel">
-    <div class="card">
-      <div class="card-title">Templates de mensagem DM</div>
-      <div class="card-sub">Clica em "Copiar" e personaliza antes de enviar.</div>
-      <div id="templates-list"></div>
-    </div>
-  </div>
-
-  <!-- CALENDÁRIO -->
+  </div><!-- CALENDÁRIO -->
   <div id="tab-calendario" class="tab-panel">
     <div class="card">
       <div class="card-title">Calendário de envios</div>
@@ -628,7 +538,7 @@ function gerarPDF(idx){
   <tr><td class="total">Total</td><td class="total">${extractPrice(o.produto)},00 €</td></tr>
   </table>
   <div class="footer">Arte customizada independente, sem afiliação oficial com as marcas referenciadas.</div>
-  <script>window.print();<\/script></body></html>`);
+  window.print();<\/script></body></html>`);
   w.document.close();
 }
 
@@ -761,201 +671,22 @@ function importData(){
 
 setBase('lefties');
 loadOrders();
-renderStock();
-renderGallery();
-renderTemplates();
 renderCal();
 
-// ── STOCK ──────────────────────────────────────────────────────────
-const STOCK_ITEMS = [
-  'Lefties Casual','Adidas Grand Court TD',
-  'Nike AF1 Adulto','Nike AF1 Criança','Nike AF1 Bebé','Nike Benassi JDI'
-];
-let stock = JSON.parse(localStorage.getItem('snkr_stock') || '{}');
-STOCK_ITEMS.forEach(k=>{ if(stock[k]===undefined) stock[k]=0; });
-
-function saveStock(){ localStorage.setItem('snkr_stock', JSON.stringify(stock)); }
-
-function stockChange(key, delta){
-  stock[key] = Math.max(0, (stock[key]||0) + delta);
-  saveStock(); renderStock();
-}
-
-function renderStock(){
-  document.getElementById('stock-grid').innerHTML = STOCK_ITEMS.map((k,i)=>{
-    const n = stock[k]||0;
-    return `<div class="stock-card${n===0?' zero':''}">
-      <div class="stock-name">${k}</div>
-      <div class="stock-count" id="sc-${i}">${n}</div>
-      <div class="stock-btns">
-        <button class="stock-btn" data-key="${k}" data-delta="-1" ontouchstart="" onclick="stockChange('${k}',-1)">−</button>
-        <button class="stock-btn" data-key="${k}" data-delta="1"  ontouchstart="" onclick="stockChange('${k}',1)">+</button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
 // ── GALERIA ────────────────────────────────────────────────────────
-let gallery = JSON.parse(localStorage.getItem('snkr_gallery') || '[]');
-let editingGalleryIdx = null;
 
-function saveGallery(){ localStorage.setItem('snkr_gallery', JSON.stringify(gallery)); }
 
-function addGalleryItem(){
-  editingGalleryIdx = null;
-  document.getElementById('gm-title').textContent = 'Adicionar par';
-  document.getElementById('gm-modelo').value = '';
-  document.getElementById('gm-desc').value = '';
-  document.getElementById('gm-status').value = 'portfolio';
-  document.getElementById('gm-foto').value = '';
-  document.getElementById('gm-del-btn').style.display = 'none';
-  document.getElementById('gallery-form-card').style.display = 'block';
-  document.getElementById('gallery-form-card').scrollIntoView({behavior:'smooth'});
-}
 
-function editGalleryItem(idx){
-  editingGalleryIdx = idx;
-  const g = gallery[idx];
-  document.getElementById('gm-title').textContent = 'Editar par';
-  document.getElementById('gm-modelo').value = g.modelo||'';
-  document.getElementById('gm-desc').value = g.desc||'';
-  document.getElementById('gm-status').value = g.status||'portfolio';
-  document.getElementById('gm-foto').value = '';
-  document.getElementById('gm-del-btn').style.display = 'inline-block';
-  document.getElementById('gallery-form-card').style.display = 'block';
-  document.getElementById('gallery-form-card').scrollIntoView({behavior:'smooth'});
-}
 
-function closeGalleryModal(){
-  document.getElementById('gallery-form-card').style.display = 'none';
-}
 
-function saveGalleryItem(){
-  const modelo = document.getElementById('gm-modelo').value.trim();
-  if(!modelo){ alert('Modelo é obrigatório.'); return; }
-  const fileInput = document.getElementById('gm-foto');
-  const file = fileInput.files[0];
-  const doSave = (foto) => {
-    const item = {
-      modelo, desc: document.getElementById('gm-desc').value.trim(),
-      status: document.getElementById('gm-status').value,
-      foto: foto || (editingGalleryIdx !== null ? gallery[editingGalleryIdx].foto : ''),
-      date: editingGalleryIdx !== null ? gallery[editingGalleryIdx].date : new Date().toLocaleDateString('pt-PT')
-    };
-    if(editingGalleryIdx !== null) gallery[editingGalleryIdx] = item;
-    else gallery.unshift(item);
-    saveGallery(); closeGalleryModal(); renderGallery();
-  };
-  if(file){
-    const reader = new FileReader();
-    reader.onload = e => doSave(e.target.result);
-    reader.readAsDataURL(file);
-  } else { doSave(null); }
-}
 
-function deleteGalleryItem(){
-  if(!confirm('Apagar este item da galeria?')) return;
-  gallery.splice(editingGalleryIdx, 1);
-  saveGallery(); closeGalleryModal(); renderGallery();
-}
 
-function renderGallery(){
-  const filter = document.getElementById('g-filter')?.value || 'all';
-  const filtered = filter === 'all' ? gallery : gallery.filter(g => g.status === filter);
-  const el = document.getElementById('gallery-grid');
-  if(!el) return;
-  if(!filtered.length){ el.innerHTML = '<div style="color:#aaa;font-size:13px;padding:1rem">Nenhum item ainda. Clica em "+ Adicionar par".</div>'; return; }
-  el.innerHTML = filtered.map((g,i)=>{
-    const idx = gallery.indexOf(g);
-    return `<div class="gallery-item">
-      <div class="gallery-img" onclick="editGalleryItem(${idx})">
-        ${g.foto ? `<img src="${g.foto}" alt="${g.modelo}">` : '<span>Sem foto<br>Clica para editar</span>'}
-      </div>
-      <div class="gallery-info">
-        <div class="gallery-model">${g.modelo}</div>
-        ${g.desc ? `<div style="font-size:11px;color:#888;margin-top:2px">${g.desc}</div>` : ''}
-        <div class="gallery-status ${g.status}">${g.status === 'vendido' ? '✓ Vendido' : '◆ Portfólio'}</div>
-      </div>
-    </div>`;
-  }).join('');
-}
 
-// ── TEMPLATES ──────────────────────────────────────────────────────
-const TEMPLATES = [
-  { title: '✅ Confirmação de encomenda',
-    body: `Olá [NOME]! 👋
 
-A tua encomenda foi confirmada com sucesso!
 
-📦 Produto: [PRODUTO]
-👟 Tamanho: EU [TAMANHO]
-💰 Total: [VALOR]€
 
-Assim que estiver pronta aviso-te com todos os detalhes de envio. Qualquer dúvida estou aqui! 🙌` },
-  { title: '📦 Encomenda enviada + Tracking',
-    body: `Olá [NOME]! 🎉
 
-Os teus [PRODUTO] foram enviados hoje!
 
-🚚 Transportadora: GLS
-🔍 Tracking: [TRACKING]
-📅 Entrega prevista: 1–3 dias úteis
-
-Podes acompanhar aqui: https://gls-group.com/PT/pt/seguimento-de-envios
-
-Obrigado pela confiança! 🙏` },
-  { title: '⭐ Pedido de review',
-    body: `Olá [NOME]! 😊
-
-Espero que os teus [PRODUTO] tenham chegado bem e estejas a adorar!
-
-Se quiseres, podes partilhar uma foto e taggear-nos — adoro ver o resultado final nos clientes 📸
-
-Volta sempre! 👟✨` },
-  { title: '⏳ Aviso de atraso',
-    body: `Olá [NOME]!
-
-Queria avisar-te que a tua encomenda ([PRODUTO]) vai ter um pequeno atraso de [X] dias.
-
-Estou a dar o máximo para entregar o melhor resultado possível. Obrigado pela paciência! 🙏
-
-Qualquer dúvida estou disponível.` },
-  { title: '📩 Resposta a pedido de orçamento',
-    body: `Olá! 👋
-
-Obrigado pelo interesse!
-
-O valor para customização de [PRODUTO] é [VALOR]€, com envio incluído (CTT / GLS).
-
-O prazo de entrega é aproximadamente [PRAZO] dias após confirmação e pagamento.
-
-Para prosseguir precisarei:
-• Tamanho
-• Morada completa
-• NIF (para fatura)
-
-Qualquer questão estou aqui! 🙌` },
-];
-
-function copyTemplate(idx){
-  const t = TEMPLATES[idx];
-  navigator.clipboard.writeText(t.body).then(()=>{
-    const btn = document.getElementById('copy-btn-'+idx);
-    btn.textContent = 'Copiado ✓'; btn.classList.add('copied');
-    setTimeout(()=>{ btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
-  });
-}
-
-function renderTemplates(){
-  const el = document.getElementById('templates-list');
-  if(!el) return;
-  el.innerHTML = TEMPLATES.map((t,i)=>`
-    <div class="template-card">
-      <div class="template-title">${t.title}</div>
-      <div class="template-body">${t.body}</div>
-      <button class="btn-copy" id="copy-btn-${i}" onclick="copyTemplate(${i})">Copiar</button>
-    </div>`).join('');
-}
 
 // ── CALENDÁRIO ─────────────────────────────────────────────────────
 let calYear = new Date().getFullYear();
@@ -1045,7 +776,6 @@ function updateCost(idx, val){
   orders[idx].custo_base = val;
   // Não chamar syncDrive aqui — só ao Gravar
 }
-
 </script>
 </body>
 </html>
