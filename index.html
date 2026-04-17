@@ -199,6 +199,13 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
 
   <!-- MARGENS -->
   <div id="tab-margens" class="tab-panel active">
+    <!-- Mini Dashboard -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1rem">
+      <div class="metric ok" id="d-faturado"><div class="metric-label">Faturado (enviado)</div><div class="metric-value">—</div><div class="metric-sub">total enviado</div></div>
+      <div class="metric hi" id="d-processo"><div class="metric-label">Em processamento</div><div class="metric-value">—</div><div class="metric-sub">a produzir</div></div>
+      <div class="metric warn" id="d-pendente"><div class="metric-label">Aguarda pagamento</div><div class="metric-value">—</div><div class="metric-sub">por confirmar</div></div>
+      <div class="metric" id="d-total"><div class="metric-label">Total encomendas</div><div class="metric-value">—</div><div class="metric-sub">todas ativas</div></div>
+    </div>
     <div class="card">
       <div class="card-title">Base da sapatilha</div>
       <div class="base-tabs">
@@ -295,7 +302,7 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
   <div id="tab-concorrencia" class="tab-panel">
     <div class="card">
       <div class="card-title">Lojas a acompanhar</div>
-      <div class="comp-card"><div><div class="comp-name">One Custom (França)</div><div class="comp-sub">Custom sneakers premium · referência europeia</div></div><a class="btn-visit" href="https://www.onecustom.fr/en" target="_blank">Visitar →</a></div>
+      <div class="comp-card"><div><div class="comp-name">One Custom (França)</div><div class="comp-sub">Custom sneakers premium · referência europeia</div></div><div style="display:flex;gap:6px"><a class="btn-visit" href="https://www.instagram.com/one.cust0m" target="_blank">📸 Instagram</a><a class="btn-visit" href="https://www.onecustom.fr/en" target="_blank">🌐 Site</a></div></div>
     </div>
     <div class="card">
       <div class="card-title">Links das bases</div>
@@ -572,7 +579,23 @@ function deliveryBadge(entrega){
 
 function setFilter(f){activeFilter=f;renderAll();}
 
-function renderAll(){renderStats();renderFinancial();renderOrders();updateTabBadge();renderMiniCal();}
+function renderAll(){renderStats();renderFinancial();renderOrders();updateTabBadge();renderMiniCal();renderDashSummary();}
+function renderDashSummary(){
+  const faturado = orders.filter(o=>o.status==='enviada'||o.status==='concluida').reduce((s,o)=>s+extractPrice(o.produto),0);
+  const processo = orders.filter(o=>o.status==='processo').reduce((s,o)=>s+extractPrice(o.produto),0);
+  const pendente = orders.filter(o=>o.status==='aguarda'||o.status==='material').reduce((s,o)=>s+extractPrice(o.produto),0);
+  const total = orders.filter(o=>o.status!=='concluida').length;
+  const upd = (id,val,sub) => {
+    const el = document.getElementById(id); if(!el) return;
+    el.querySelector('.metric-value').textContent = val;
+    if(sub) el.querySelector('.metric-sub').textContent = sub;
+  };
+  upd('d-faturado', faturado+'€');
+  upd('d-processo', processo+'€');
+  upd('d-pendente', pendente+'€');
+  upd('d-total', total, total===1?'1 ativa':total+' ativas');
+}
+
 
 function renderStats(){
   const counts={all:orders.filter(o=>o.status!=='concluida').length,material:0,aguarda:0,processo:0,enviada:0};
