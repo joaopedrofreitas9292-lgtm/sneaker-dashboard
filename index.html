@@ -181,6 +181,21 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
 .mini-cal-legend { display:flex; gap:10px; margin-top:8px; font-size:10px; color:#888; flex-wrap:wrap; }
 .mini-cal-legend span { display:flex; align-items:center; gap:4px; }
 .mini-cal-legend i { display:inline-block; width:10px; height:10px; border-radius:2px; }
+
+/* filtro 7/30 dias */
+.period-filter { display:flex; gap:4px; align-items:center; margin-bottom:10px; }
+.period-filter span { font-size:11px; color:#888; margin-right:2px; }
+.period-btn { padding:3px 10px; border-radius:99px; border:0.5px solid #ccc; background:#f5f5f3; font-size:11px; color:#666; cursor:pointer; font-weight:500; transition:all .15s; }
+.period-btn.active { background:#111; color:#fff; border-color:#111; }
+
+/* custo extra encomenda */
+.extra-toggle-row { display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; background:#f5f5f3; border:0.5px solid #e0dfd8; margin-bottom:8px; cursor:pointer; user-select:none; }
+.extra-toggle-row:hover { background:#eeedea; }
+.extra-toggle-row .toggle-track { flex-shrink:0; }
+.extra-fields { background:#fffbeb; border:0.5px solid #fcd34d; border-radius:8px; padding:10px 12px; margin-bottom:8px; display:none; }
+.extra-fields.visible { display:block; }
+.extra-preview { font-size:11px; color:#92400e; background:#fef3c7; border-radius:6px; padding:6px 10px; margin-top:6px; line-height:1.7; }
+.extra-preview strong { color:#111; }
 </style>
 </head>
 <body>
@@ -199,6 +214,12 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
 
   <!-- MARGENS -->
   <div id="tab-margens" class="tab-panel active">
+    <!-- Filtro período -->
+    <div class="period-filter">
+      <span>Período:</span>
+      <button class="period-btn active" id="pbtn-7" onclick="setPeriod(7,this)">Últimos 7 dias</button>
+      <button class="period-btn" id="pbtn-30" onclick="setPeriod(30,this)">Últimos 30 dias</button>
+    </div>
     <!-- Mini Dashboard -->
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1rem">
       <div class="metric ok" id="d-faturado"><div class="metric-label">Faturado (enviado)</div><div class="metric-value">—</div><div class="metric-sub">total enviado</div></div>
@@ -357,6 +378,19 @@ h1 { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.07em; tex
           <div class="form-group"><label>Data prevista envio</label><input type="date" id="f-entrega"></div>
           <div class="form-group" style="display:flex;align-items:flex-end"><button class="btn-primary" style="width:100%" onclick="addOrder()">Adicionar encomenda</button></div>
         </div>
+        <!-- CUSTO EXTRA -->
+        <div class="extra-toggle-row" onclick="toggleExtraForm()" id="extra-toggle-row">
+          <label class="toggle-track" onclick="event.stopPropagation()"><input type="checkbox" class="toggle-input" id="has-extra" onchange="toggleExtraForm()"><span class="toggle-thumb"></span></label>
+          <span style="font-size:12px;font-weight:500">➕ Adicionar custo extra ao cliente</span>
+          <span style="font-size:11px;color:#888">(personalização, urgência, etc.)</span>
+        </div>
+        <div class="extra-fields" id="extra-fields">
+          <div class="form-row">
+            <div class="form-group"><label>Descrição do extra</label><input type="text" id="f-extra-desc" placeholder="ex: Customização laser, bordado..."></div>
+            <div class="form-group"><label>Valor extra c/ IVA (€)</label><input type="number" id="f-extra-valor" placeholder="ex: 10" step="1" oninput="updateExtraPreview()"></div>
+          </div>
+          <div class="extra-preview" id="extra-preview" style="display:none"></div>
+        </div>
       </div>
     </div>
     <div id="orders-list"></div>
@@ -500,9 +534,15 @@ function addOrder(){
     tamanho:document.getElementById('f-tamanho').value.trim(),morada:document.getElementById('f-morada').value.trim(),
     cp:document.getElementById('f-cp').value.trim(),localidade:document.getElementById('f-localidade').value.trim(),
     notas:document.getElementById('f-notas').value.trim(),entrega:defaultEntrega,
-    status:'aguarda',tracking:'',fatura:'',open:false,editing:false,custo_base:''});
+    status:'aguarda',tracking:'',fatura:'',open:false,editing:false,custo_base:'',
+    extra_desc: document.getElementById('has-extra').checked ? document.getElementById('f-extra-desc').value.trim() : '',
+    extra_valor: document.getElementById('has-extra').checked ? (parseFloat(document.getElementById('f-extra-valor').value)||0) : 0
+  });
   syncDrive();renderAll();
-  ['f-nome','f-contacto','f-nif','f-email','f-tamanho','f-morada','f-cp','f-localidade','f-notas','f-entrega'].forEach(f=>document.getElementById(f).value='');
+  ['f-nome','f-contacto','f-nif','f-email','f-tamanho','f-morada','f-cp','f-localidade','f-notas','f-entrega','f-extra-desc','f-extra-valor'].forEach(f=>{const el=document.getElementById(f);if(el)el.value='';});
+  document.getElementById('has-extra').checked=false;
+  document.getElementById('extra-fields').classList.remove('visible');
+  document.getElementById('extra-preview').style.display='none';
 }
 
 function pickStatus(idx,st){orders[idx].status=st;if(st!=='enviada'){orders[idx].tracking='';orders[idx].fatura='';}syncDrive();renderAll();}
@@ -517,6 +557,8 @@ function saveEdit(idx){
   orders[idx].tamanho=g('e-tamanho').value.trim();orders[idx].morada=g('e-morada').value.trim();
   orders[idx].cp=g('e-cp').value.trim();orders[idx].localidade=g('e-localidade').value.trim();
   orders[idx].notas=g('e-notas').value.trim();orders[idx].entrega=g('e-entrega').value;
+  orders[idx].extra_desc=g('e-extra-desc').value.trim();
+  orders[idx].extra_valor=parseFloat(g('e-extra-valor').value)||0;
   orders[idx].editing=false;syncDrive();renderAll();
 }
 
@@ -562,7 +604,7 @@ function gerarPDF(idx){
   ${o.tracking?`<tr><td>Tracking GLS</td><td>${o.tracking}</td></tr>`:''}
   ${o.fatura?`<tr><td>Nº Fatura</td><td>${o.fatura}</td></tr>`:''}
   <tr><td>Estado</td><td>${stLabel[o.status]||o.status}</td></tr>
-  <tr><td class="total">Total</td><td class="total">${extractPrice(o.produto)},00 €</td></tr>
+  ${o.extra_valor>0?`<tr><td>Extra (${o.extra_desc||'Personalização'})</td><td>${(parseFloat(o.extra_valor)||0).toFixed(2)} € c/ IVA</td></tr>`:''}\n  <tr><td class="total">Total</td><td class="total">${getTotalComExtra(o).toFixed(2)} €</td></tr>
   </table>
   <div class="footer">Arte customizada independente, sem afiliação oficial com as marcas referenciadas.</div>
   window.print();<\/script></body></html>`);
@@ -581,19 +623,8 @@ function setFilter(f){activeFilter=f;renderAll();}
 
 function renderAll(){renderStats();renderFinancial();renderOrders();updateTabBadge();renderMiniCal();renderDashSummary();}
 function renderDashSummary(){
-  const faturado = orders.filter(o=>o.status==='enviada'||o.status==='concluida').reduce((s,o)=>s+extractPrice(o.produto),0);
-  const processo = orders.filter(o=>o.status==='processo').reduce((s,o)=>s+extractPrice(o.produto),0);
-  const pendente = orders.filter(o=>o.status==='aguarda'||o.status==='material').reduce((s,o)=>s+extractPrice(o.produto),0);
-  const total = orders.filter(o=>o.status!=='concluida').length;
-  const upd = (id,val,sub) => {
-    const el = document.getElementById(id); if(!el) return;
-    el.querySelector('.metric-value').textContent = val;
-    if(sub) el.querySelector('.metric-sub').textContent = sub;
-  };
-  upd('d-faturado', faturado+'€');
-  upd('d-processo', processo+'€');
-  upd('d-pendente', pendente+'€');
-  upd('d-total', total, total===1?'1 ativa':total+' ativas');
+  // usa período selecionado para os 4 cards de topo
+  renderPeriodStats();
 }
 
 
@@ -661,6 +692,7 @@ function renderCard(o,idx){
         <div class="form-row"><div class="form-group"><label>Morada</label><input id="e-morada-${idx}" value="${o.morada||''}"></div><div class="form-group"><label>Notas</label><input id="e-notas-${idx}" value="${o.notas||''}"></div></div>
         <div class="form-row"><div class="form-group"><label>Código Postal</label><input id="e-cp-${idx}" value="${o.cp||''}"></div><div class="form-group"><label>Localidade</label><input id="e-localidade-${idx}" value="${o.localidade||''}"></div></div>
         <div class="form-row"><div class="form-group"><label>Data prevista envio</label><input type="date" id="e-entrega-${idx}" value="${o.entrega||''}"></div></div>
+        <div class="form-row"><div class="form-group"><label>Extra — descrição</label><input id="e-extra-desc-${idx}" value="${o.extra_desc||''}" placeholder="ex: Customização laser"></div><div class="form-group"><label>Extra valor c/ IVA (€)</label><input type="number" id="e-extra-valor-${idx}" value="${o.extra_valor||0}" step="1" min="0"></div></div>
         <div style="display:flex;gap:8px;margin-top:4px"><button class="btn-save" onclick="saveEdit(${idx})">Guardar alterações</button><button class="btn-sm" onclick="toggleEdit(${idx})">Cancelar</button></div>
       </div>`:`<div class="order-body">
         <div>Cliente<span class="field-val">${o.nome}</span></div>
@@ -672,6 +704,7 @@ function renderCard(o,idx){
         <div style="grid-column:1/-1">Morada<span class="field-val">${mf}</span></div>
         ${o.entrega?`<div>Envio previsto<span class="field-val">${new Date(o.entrega).toLocaleDateString('pt-PT')}</span></div>`:''}
         ${o.notas?`<div style="grid-column:1/-1">Notas<span class="field-val">${o.notas}</span></div>`:''}
+        ${o.extra_valor>0?`<div style="grid-column:1/-1">Extra ao cliente<span class="field-val" style="color:#92400e">${o.extra_desc||'Extra'} — <strong>${(parseFloat(o.extra_valor)||0).toFixed(2).replace('.',',')}€ c/ IVA</strong></span></div>`:''}
         ${o.tracking?`<div style="grid-column:1/-1">Tracking GLS<span class="field-val">${o.tracking}</span></div>`:''}
         ${o.fatura?`<div>Nº Fatura<span class="field-val">${o.fatura}</span></div>`:''}
       </div>`}
@@ -715,6 +748,87 @@ function importData(){
 setBase('lefties');
 loadOrders();
 renderCal();
+
+// ── FILTRO PERÍODO (7 / 30 dias) ───────────────────────────────────
+let statsPeriod = 7;
+function setPeriod(days, btn) {
+  statsPeriod = days;
+  document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderDashSummary();
+  renderPeriodStats();
+}
+
+function getOrdersInPeriod(days) {
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - days);
+  cutoff.setHours(0,0,0,0);
+  return orders.filter(o => {
+    // usa a data da encomenda (campo date em pt-PT ou ISO)
+    const parts = (o.date||'').split('/');
+    let d;
+    if(parts.length === 3) d = new Date(parts[2], parts[1]-1, parts[0]);
+    else d = new Date(o.date);
+    return !isNaN(d) && d >= cutoff;
+  });
+}
+
+function renderPeriodStats() {
+  const periodOrders = getOrdersInPeriod(statsPeriod);
+  // faturado = enviadas+concluídas no período
+  const faturado = periodOrders.filter(o=>o.status==='enviada'||o.status==='concluida').reduce((s,o)=>s+getTotalComExtra(o),0);
+  const processo = periodOrders.filter(o=>o.status==='processo').reduce((s,o)=>s+getTotalComExtra(o),0);
+  const pendente = periodOrders.filter(o=>o.status==='aguarda'||o.status==='material').reduce((s,o)=>s+getTotalComExtra(o),0);
+  const total = periodOrders.filter(o=>o.status!=='concluida').length;
+
+  const sub = `(${statsPeriod === 7 ? 'últimos 7 dias' : 'últimos 30 dias'})`;
+  const upd = (id,val,subsub) => {
+    const el = document.getElementById(id); if(!el) return;
+    el.querySelector('.metric-value').textContent = val;
+    if(subsub !== undefined) el.querySelector('.metric-sub').textContent = subsub;
+  };
+  upd('d-faturado', faturado+'€', sub);
+  upd('d-processo', processo+'€', sub);
+  upd('d-pendente', pendente+'€', sub);
+  upd('d-total', total, total===1?'1 ativa '+sub:total+' ativas '+sub);
+}
+
+// ── CUSTO EXTRA COM IVA ────────────────────────────────────────────
+function getTotalComExtra(o) {
+  const base = extractPrice(o.produto);
+  if (!o.extra_valor || parseFloat(o.extra_valor) <= 0) return base;
+  // extra_valor já é c/ IVA — valor final ao cliente
+  return base + (parseFloat(o.extra_valor) || 0);
+}
+
+function toggleExtraForm() {
+  const chk = document.getElementById('has-extra');
+  const fields = document.getElementById('extra-fields');
+  // sincronizar estado
+  const isOpen = fields.classList.contains('visible');
+  if (isOpen) {
+    fields.classList.remove('visible');
+    chk.checked = false;
+    document.getElementById('extra-preview').style.display = 'none';
+  } else {
+    fields.classList.add('visible');
+    chk.checked = true;
+  }
+}
+
+function updateExtraPreview() {
+  const val = parseFloat(document.getElementById('f-extra-valor').value) || 0;
+  const prev = document.getElementById('extra-preview');
+  if (val <= 0) { prev.style.display = 'none'; return; }
+  const siva = Math.round(val / 1.23 * 100) / 100;
+  const iva = Math.round((val - siva) * 100) / 100;
+  const prodVal = extractPrice(document.getElementById('f-produto').value);
+  const totalCliente = prodVal + val;
+  prev.style.display = 'block';
+  prev.innerHTML = `Extra cobrado ao cliente: <strong>${val.toFixed(2).replace('.',',')}€ c/ IVA</strong> (${siva.toFixed(2).replace('.',',')}€ s/ IVA + ${iva.toFixed(2).replace('.',',')}€ IVA)<br>Total cobrado ao cliente: <strong>${totalCliente.toFixed(2).replace('.',',')}€</strong>`;
+}
+
+
 // ── MINI CALENDÁRIO (painel encomendas) ────────────────────────────
 function renderMiniCal(){
   const el = document.getElementById('mini-cal-box');
@@ -868,9 +982,13 @@ function renderCostBox(o, idx){
   const baseReal = parseFloat(o.custo_base) || basePadrao;
   const mat = 6.50 / 1.23;
   const custos = baseReal/1.23 + mat;
-  const pvpSiva = extractPrice(o.produto) / 1.23;
+  const pvpBase = extractPrice(o.produto);
+  // extra_valor é c/ IVA (valor final ao cliente)
+  const extraComIva = parseFloat(o.extra_valor) || 0;
+  const pvpTotal = pvpBase + extraComIva;
+  const pvpSiva = pvpTotal / 1.23;
   const margem = pvpSiva - custos;
-  const pct = Math.round(margem/pvpSiva*100);
+  const pct = pvpSiva > 0 ? Math.round(margem/pvpSiva*100) : 0;
   return `<div class="cost-box">
     <div style="font-size:11px;font-weight:500;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Custo desta encomenda</div>
     <div class="cost-row"><span>Base sapatilha c/ IVA</span>
@@ -879,7 +997,8 @@ function renderCostBox(o, idx){
         onchange="updateCost(${idx},this.value)" style="width:90px">
     </div>
     <div class="cost-row"><span>Materiais Angelus</span><span>${fmtE(mat)}</span></div>
-    <div class="cost-row"><span>Receita s/ IVA</span><span>${fmtE(pvpSiva)}</span></div>
+    ${extraComIva > 0 ? `<div class="cost-row" style="color:#92400e"><span>Extra ao cliente c/ IVA${o.extra_desc?' ('+o.extra_desc+')':''}</span><span>+ ${fmtE(extraComIva)}</span></div>` : ''}
+    <div class="cost-row"><span>Receita total s/ IVA</span><span>${fmtE(pvpSiva)}</span></div>
     <div class="cost-row" style="color:${margem>=0?'#15803d':'#dc2626'}"><span>Margem líquida</span><span>${fmtE(margem)} (~${pct}%)</span></div>
   </div>`;
 }
