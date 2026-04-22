@@ -86,7 +86,7 @@ body { background: var(--bg); color: var(--text); padding: 1rem; font-size: 14px
 .toggle-thumb { position:absolute;top:2px;left:2px;width:12px;height:12px;background:#fff;border-radius:50%;transition:transform .2s;pointer-events:none; }
 
 /* ORDER STATS */
-.order-stats { display: grid; grid-template-columns: repeat(5,1fr); gap: 8px; margin-bottom: 1rem; }
+.order-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 1rem; }
 .ostat { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; cursor: pointer; transition: all .15s; }
 .ostat:hover { border-color: var(--border2); transform: translateY(-1px); }
 .ostat-val { font-size: 24px; font-weight: 600; color: var(--text); letter-spacing: -0.02em; }
@@ -146,7 +146,7 @@ body { background: var(--bg); color: var(--text); padding: 1rem; font-size: 14px
 .bs-concluida { background: var(--slate); color: var(--text2); }
 .order-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 8px; overflow: hidden; transition: border-color .15s; }
 .order-card:hover { border-color: var(--border2); }
-.order-card.concluida { opacity: 0.5; }
+.order-card.enviada { opacity: 0.6; }
 .order-summary { display: flex; align-items: center; gap: 8px; padding: 11px 14px; cursor: pointer; user-select: none; transition: background .12s; }
 .order-summary:hover { background: var(--bg3); }
 .order-summary-left { flex: 1; display: flex; align-items: center; gap: 7px; flex-wrap: wrap; min-width: 0; }
@@ -180,7 +180,7 @@ body { background: var(--bg); color: var(--text); padding: 1rem; font-size: 14px
 @media(max-width:600px){
   .metrics { grid-template-columns: 1fr 1fr; } .grid2 { grid-template-columns: 1fr; }
   .form-row { grid-template-columns: 1fr; } .order-body { grid-template-columns: 1fr; }
-  .order-stats { grid-template-columns: repeat(3,1fr); }
+  .order-stats { grid-template-columns: repeat(2,1fr); }
   .tshirt-item { grid-template-columns: 1fr 70px 80px 32px; }
 }
 
@@ -272,9 +272,9 @@ body { background: var(--bg); color: var(--text); padding: 1rem; font-size: 14px
       <button class="period-btn" id="pbtn-30" onclick="setPeriod(30,this)">Últimos 30 dias</button>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1rem">
-      <div class="metric ok" id="d-faturado"><div class="metric-label">Faturado (enviado)</div><div class="metric-value">—</div><div class="metric-sub">total enviado</div></div>
-      <div class="metric hi" id="d-processo"><div class="metric-label">Em processamento</div><div class="metric-value">—</div><div class="metric-sub">a produzir</div></div>
       <div class="metric warn" id="d-pendente"><div class="metric-label">Aguarda pagamento</div><div class="metric-value">—</div><div class="metric-sub">por confirmar</div></div>
+      <div class="metric hi" id="d-processo"><div class="metric-label">Em processamento</div><div class="metric-value">—</div><div class="metric-sub">a produzir</div></div>
+      <div class="metric ok" id="d-faturado"><div class="metric-label">Enviado / Faturado</div><div class="metric-value">—</div><div class="metric-sub">total enviado</div></div>
       <div class="metric" id="d-total"><div class="metric-label">Total encomendas</div><div class="metric-value">—</div><div class="metric-sub">todas ativas</div></div>
     </div>
 
@@ -667,8 +667,8 @@ async function syncDrive(){
 }
 
 // ── ENCOMENDAS ───────────────────────────────────────────────────────
-const stLabel={material:'Aguarda material',aguarda:'Aguarda pagamento',processo:'Em processamento',enviada:'Enviada',concluida:'Concluída'};
-const stBadge={material:'bs-material',aguarda:'bs-aguarda',processo:'bs-processo',enviada:'bs-enviada',concluida:'bs-concluida'};
+const stLabel={material:'Aguarda material',aguarda:'Aguarda pagamento',processo:'Em processamento',enviada:'Enviada (GLS)'};
+const stBadge={material:'bs-material',aguarda:'bs-aguarda',processo:'bs-processo',enviada:'bs-enviada'};
 
 function toggleNewForm(){
   const f=document.getElementById('new-order-form'),c=document.getElementById('new-form-chevron');
@@ -705,7 +705,7 @@ function addOrder(){
   document.getElementById('new-portes-calc').innerHTML='';
 }
 
-function pickStatus(idx,st){orders[idx].status=st;if(st!=='enviada'){orders[idx].tracking='';orders[idx].fatura='';}syncDrive();renderAll();}
+function pickStatus(idx,st){orders[idx].status=st;syncDrive();renderAll();}
 function toggleOrder(idx){orders[idx].open=!orders[idx].open;renderAll();}
 function toggleEdit(idx){orders[idx].editing=!orders[idx].editing;if(!orders[idx].open)orders[idx].open=true;renderAll();}
 
@@ -760,7 +760,7 @@ function renderAll(){renderStats();renderFinancial();renderOrders();updateTabBad
 function renderTopStats(){
   // Top cores
   const corCount={};const tamCount={};
-  orders.filter(o=>o.status!=='concluida').forEach(o=>{
+  orders.forEach(o=>{
     (o.tshirts||[]).forEach(t=>{
       corCount[t.cor]=(corCount[t.cor]||0)+1;
       tamCount[t.tamanho]=(tamCount[t.tamanho]||0)+1;
@@ -796,43 +796,41 @@ function renderTopStats(){
 function renderDashStats(){renderPeriodStats();}
 
 function renderStats(){
-  const counts={all:orders.filter(o=>o.status!=='concluida').length,material:0,aguarda:0,processo:0,enviada:0};
-  orders.forEach(o=>{if(o.status!=='concluida'&&counts[o.status]!==undefined)counts[o.status]++;});
-  const colors={all:'#111',material:'#7e22ce',aguarda:'#92400e',processo:'#1d4ed8',enviada:'#15803d'};
+  const counts={all:orders.length,aguarda:0,processo:0,enviada:0};
+  orders.forEach(o=>{if(counts[o.status]!==undefined)counts[o.status]++;});
+  const colors={all:'#e8e8f0',aguarda:'#92400e',processo:'#1d4ed8',enviada:'#15803d'};
   document.getElementById('order-stats').innerHTML=
-    [['all','Ativas'],['material','Material'],['aguarda','Pagamento'],['processo','Processo'],['enviada','Enviadas']]
+    [['aguarda','Pagamento'],['processo','Processo'],['enviada','Enviadas'],['all','Total']]
     .map(([k,l])=>`<div class="ostat f-${k}${activeFilter===k?' active-filter':''}" onclick="setFilter('${k}')"><div class="ostat-val" style="color:${colors[k]}">${counts[k]}</div><div class="ostat-lbl">${l}</div></div>`).join('');
 }
 
 function renderFinancial(){
-  const n_env=orders.filter(o=>o.status==='enviada'||o.status==='concluida').reduce((s,o)=>s+getTotal(o),0);
+  const n_env=orders.filter(o=>o.status==='enviada').reduce((s,o)=>s+getTotal(o),0);
   const n_proc=orders.filter(o=>o.status==='processo').reduce((s,o)=>s+getTotal(o),0);
   const n_pend=orders.filter(o=>o.status==='aguarda').reduce((s,o)=>s+getTotal(o),0);
-  const n_mat=orders.filter(o=>o.status==='material').reduce((s,o)=>s+getTotal(o),0);
+  const n_total=orders.reduce((s,o)=>s+getTotal(o),0);
   document.getElementById('fin-summary').innerHTML=`
     <div class="card-title">Resumo financeiro</div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-      <div class="metric" style="background:var(--purple-dim);border:1px solid var(--purple-border)"><div class="metric-label" style="color:var(--purple)">Aguarda material</div><div class="metric-value" style="color:var(--purple)">${n_mat.toFixed(0)}€</div></div>
       <div class="metric" style="background:var(--amber-dim);border:1px solid var(--amber-border)"><div class="metric-label" style="color:var(--amber)">Aguarda pagamento</div><div class="metric-value" style="color:var(--amber)">${n_pend.toFixed(0)}€</div></div>
       <div class="metric hi"><div class="metric-label">Em processamento</div><div class="metric-value">${n_proc.toFixed(0)}€</div></div>
-      <div class="metric ok"><div class="metric-label">Faturado (enviado)</div><div class="metric-value">${n_env.toFixed(0)}€</div></div>
+      <div class="metric ok"><div class="metric-label">Enviado / Faturado</div><div class="metric-value">${n_env.toFixed(0)}€</div></div>
+      <div class="metric"><div class="metric-label">Total pipeline</div><div class="metric-value">${n_total.toFixed(0)}€</div></div>
     </div>`;
 }
 
 function updateTabBadge(){
-  const n=orders.filter(o=>o.status==='aguarda'||o.status==='material').length;
+  const n=orders.filter(o=>o.status==='aguarda').length;
   const btn=document.getElementById('tab-enc-btn');
   const ex=btn.querySelector('.tab-badge');if(ex)ex.remove();
   if(n>0){const b=document.createElement('span');b.className='tab-badge';b.textContent=n;btn.appendChild(b);}
 }
 
 function renderOrders(){
-  const active=activeFilter==='all'?orders.filter(o=>o.status!=='concluida'):orders.filter(o=>o.status===activeFilter&&o.status!=='concluida');
-  const concluded=orders.filter(o=>o.status==='concluida');
+  const active=activeFilter==='all'?orders:orders.filter(o=>o.status===activeFilter);
   const el=document.getElementById('orders-list');
-  el.innerHTML=active.length?active.map(o=>renderCard(o,orders.indexOf(o))).join(''):`<div class="empty-state">${activeFilter==='all'?'Nenhuma encomenda ativa.':'Nenhuma encomenda com este estado.'}</div>`;
-  const hs=document.getElementById('history-section'),hl=document.getElementById('history-list');
-  if(concluded.length){hs.style.display='block';hl.innerHTML=concluded.map(o=>renderCard(o,orders.indexOf(o))).join('');}else{hs.style.display='none';}
+  el.innerHTML=active.length?active.map(o=>renderCard(o,orders.indexOf(o))).join(''):`<div class="empty-state">${activeFilter==='all'?'Nenhuma encomenda.':'Nenhuma encomenda com este estado.'}</div>`;
+  document.getElementById('history-section').style.display='none';
 }
 
 function renderCard(o,idx){
@@ -840,7 +838,7 @@ function renderCard(o,idx){
   const tshirts=o.tshirts||[];
   const nTs=tshirts.length;
   const tsSummary=tshirts.slice(0,2).map(t=>`${t.tamanho} ${t.cor}`).join(', ')+(tshirts.length>2?` +${tshirts.length-2}`:'')||'—';
-  return `<div class="order-card${o.open?' open':''}${o.status==='concluida'?' concluida':''}">
+  return `<div class="order-card${o.open?' open':''}${o.status==='enviada'?' enviada':''}">
     <div class="order-summary" onclick="toggleOrder(${idx})">
       <div class="order-summary-left">
         <span class="order-id">${o.id}</span>
@@ -896,8 +894,7 @@ function renderCard(o,idx){
         <span class="s-pill sp-material${o.status==='material'?' sel':''}" onclick="pickStatus(${idx},'material')">Aguarda material</span>
         <span class="s-pill sp-aguarda${o.status==='aguarda'?' sel':''}" onclick="pickStatus(${idx},'aguarda')">Aguarda pagamento</span>
         <span class="s-pill sp-processo${o.status==='processo'?' sel':''}" onclick="pickStatus(${idx},'processo')">Em processamento</span>
-        <span class="s-pill sp-enviada${o.status==='enviada'?' sel':''}" onclick="pickStatus(${idx},'enviada')">Enviada</span>
-        <span class="s-pill sp-concluida${o.status==='concluida'?' sel':''}" onclick="pickStatus(${idx},'concluida')">✓ Concluída</span>
+        <span class="s-pill sp-enviada${o.status==='enviada'?' sel':''}" onclick="pickStatus(${idx},'enviada')">✓ Enviada (GLS)</span>
       </div>
       <div class="tracking-area${o.status==='enviada'?' visible':''}">
         <label>Número de tracking</label>
@@ -973,10 +970,10 @@ function getOrdersInPeriod(days){
 }
 function renderPeriodStats(){
   const periodOrders=getOrdersInPeriod(statsPeriod);
-  const faturado=periodOrders.filter(o=>o.status==='enviada'||o.status==='concluida').reduce((s,o)=>s+getTotal(o),0);
+  const faturado=periodOrders.filter(o=>o.status==='enviada').reduce((s,o)=>s+getTotal(o),0);
   const processo=periodOrders.filter(o=>o.status==='processo').reduce((s,o)=>s+getTotal(o),0);
-  const pendente=periodOrders.filter(o=>o.status==='aguarda'||o.status==='material').reduce((s,o)=>s+getTotal(o),0);
-  const total=periodOrders.filter(o=>o.status!=='concluida').length;
+  const pendente=periodOrders.filter(o=>o.status==='aguarda').reduce((s,o)=>s+getTotal(o),0);
+  const total=periodOrders.length;
   const sub=`(${statsPeriod===7?'últimos 7 dias':'últimos 30 dias'})`;
   const upd=(id,val,subsub)=>{
     const el=document.getElementById(id);if(!el)return;
@@ -1000,7 +997,7 @@ function renderMiniCal(elId){
   const firstDay=new Date(year,month,1).getDay();
   const daysInMonth=new Date(year,month+1,0).getDate();
   const deliveries={};
-  orders.filter(o=>o.entrega&&o.status!=='concluida').forEach(o=>{
+  orders.filter(o=>o.entrega).forEach(o=>{
     const d=new Date(o.entrega);d.setHours(0,0,0,0);
     if(d.getFullYear()===year&&d.getMonth()===month){
       const key=d.getDate();if(!deliveries[key])deliveries[key]=[];
@@ -1009,13 +1006,13 @@ function renderMiniCal(elId){
     }
   });
   const upcoming=orders.filter(o=>{
-    if(!o.entrega||o.status==='concluida')return false;
+    if(!o.entrega)return false;
     const d=new Date(o.entrega);d.setHours(0,0,0,0);
     const diff=Math.ceil((d-today)/(1000*60*60*24));
     return diff>=0&&diff<=30;
   });
   const urgent=orders.filter(o=>{
-    if(!o.entrega||o.status==='concluida')return false;
+    if(!o.entrega)return false;
     const d=new Date(o.entrega);d.setHours(0,0,0,0);
     const diff=Math.ceil((d-today)/(1000*60*60*24));
     return diff<0||(diff>=0&&diff<=3);
