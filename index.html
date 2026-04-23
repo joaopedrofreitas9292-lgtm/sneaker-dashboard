@@ -249,6 +249,13 @@ body { background: var(--bg); color: var(--text); padding: 1rem; font-size: 14px
 .top-bar-fill { height: 100%; border-radius: 3px; background: var(--accent); }
 .top-count { font-size: 11px; color: var(--text3); min-width: 20px; text-align: right; font-weight: 600; }
 .color-dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(255,255,255,.2); flex-shrink: 0; }
+
+/* OUTROS ARTIGOS */
+.outros-item { display: grid; grid-template-columns: 1fr 90px 36px; gap: 6px; align-items: center; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; font-size: 12px; margin-bottom: 4px; }
+.outros-item input { padding: 4px 7px; border: 1px solid var(--border2); border-radius: 6px; font-size: 12px; background: var(--bg4); color: var(--text); width: 100%; }
+.outros-item input:focus { outline:none; border-color:var(--accent); }
+.section-sep { display:flex; align-items:center; gap:8px; margin: 12px 0 6px; font-size:10px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:.07em; }
+.section-sep::after { content:''; flex:1; height:1px; background:var(--border); }
 </style>
 </head>
 <body>
@@ -413,6 +420,13 @@ body { background: var(--bg); color: var(--text); padding: 1rem; font-size: 14px
         </div>
         <div class="tshirt-list" id="new-tshirt-list"></div>
         <button class="btn-add-item" onclick="addTshirtItem('new-tshirt-list')">+ Adicionar t-shirt</button>
+
+        <div class="section-sep" style="margin-top:14px">📦 Outros artigos</div>
+        <div style="display:grid;grid-template-columns:1fr 90px 36px;gap:6px;margin-bottom:4px;font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:0 10px">
+          <span>Descrição</span><span>Preço c/ IVA</span><span></span>
+        </div>
+        <div id="new-outros-list"></div>
+        <button class="btn-add-item" style="border-color:var(--green-border);color:var(--green);background:var(--green-dim)" onclick="addOutroItem('new-outros-list')">+ Adicionar outro artigo</button>
 
         <div class="portes-calc" id="new-portes-calc"></div>
 
@@ -604,20 +618,23 @@ function renderMargens(){
 // ── TSHIRT ITEMS ─────────────────────────────────────────────────────
 function addTshirtItem(listId, desc='', tam='', cor='') {
   const list = document.getElementById(listId);
+  if(!list) return;
+  const calcId = listId.replace('tshirt-list','portes-calc');
+  const outrosId = listId.replace('tshirt-list','outros-list');
   const div = document.createElement('div');
   div.className = 'tshirt-item';
   div.innerHTML = `
-    <input type="text" placeholder="Design/descrição" value="${desc}" onchange="updatePortesCalc('${listId}')">
-    <select onchange="updatePortesCalc('${listId}')">
+    <input type="text" placeholder="Design/descrição" value="${desc}" oninput="updatePortesCalcById('${listId}','${outrosId}','${calcId}')">
+    <select onchange="updatePortesCalcById('${listId}','${outrosId}','${calcId}')">
       ${TAMANHOS.map(t=>`<option${t===tam?' selected':''}>${t}</option>`).join('')}
     </select>
-    <select onchange="updatePortesCalc('${listId}')">
+    <select onchange="updatePortesCalcById('${listId}','${outrosId}','${calcId}')">
       ${CORES.map(c=>`<option${c===cor?' selected':''}>${c}</option>`).join('')}
     </select>
-    <button class="btn-remove-item" onclick="this.parentElement.remove();updatePortesCalc('${listId}')">✕</button>
+    <button class="btn-remove-item" onclick="this.parentElement.remove();updatePortesCalcById('${listId}','${outrosId}','${calcId}')">✕</button>
   `;
   list.appendChild(div);
-  updatePortesCalc(listId);
+  updatePortesCalcById(listId, outrosId, calcId);
 }
 
 function getTshirtItems(listId) {
@@ -629,23 +646,57 @@ function getTshirtItems(listId) {
   });
 }
 
-function updatePortesCalc(listId) {
-  const calcId = listId.replace('tshirt-list','portes-calc');
+function addOutroItem(listId, desc='', preco='') {
+  const list = document.getElementById(listId);
+  if(!list) return;
+  // Derive the portes-calc id: outros-list → portes-calc
+  const calcId = listId.replace('outros-list','portes-calc');
+  const tshirtId = listId.replace('outros-list','tshirt-list');
+  const div = document.createElement('div');
+  div.className = 'outros-item';
+  div.innerHTML = `
+    <input type="text" placeholder="ex: Boné, Poster, Sticker pack..." value="${desc}" oninput="updatePortesCalcById('${tshirtId}','${listId}','${calcId}')">
+    <input type="number" placeholder="0.00" step="0.01" min="0" value="${preco}" style="text-align:right" oninput="updatePortesCalcById('${tshirtId}','${listId}','${calcId}')">
+    <button class="btn-remove-item" onclick="this.parentElement.remove();updatePortesCalcById('${tshirtId}','${listId}','${calcId}')">✕</button>
+  `;
+  list.appendChild(div);
+}
+
+function getOutrosItems(listId) {
+  const list = document.getElementById(listId);
+  if(!list) return [];
+  return Array.from(list.querySelectorAll('.outros-item')).map(row => {
+    const inputs = row.querySelectorAll('input');
+    return { desc: inputs[0].value.trim(), preco: parseFloat(inputs[1].value)||0 };
+  }).filter(a => a.desc || a.preco > 0);
+}
+
+function updatePortesCalcById(tshirtListId, outrosListId, calcId) {
   const el = document.getElementById(calcId);
   if(!el) return;
-  const items = getTshirtItems(listId);
-  const n = items.length;
-  if(n === 0) { el.innerHTML = ''; return; }
-  const subtotal = n * PVP;
-  if(n >= 2) {
-    el.innerHTML = `<strong>${n} t-shirt${n>1?'s':''}</strong> · Subtotal: <strong>${subtotal.toFixed(2).replace('.',',')}€</strong><br>
-      ✅ <span class="portes-meu">Portes a meu cargo</span> (4,06€ s/ IVA · ${(P_PORTES_SIVA*1.23).toFixed(2).replace('.',',')}€ c/ IVA)<br>
-      Total ao cliente: <strong>${(n*PVP).toFixed(2).replace('.',',')}€</strong>`;
-  } else {
-    el.innerHTML = `<strong>1 t-shirt</strong> · Preço: <strong>${PVP.toFixed(2).replace('.',',')}€</strong><br>
-      📦 <span class="portes-cliente">Portes cobrados ao cliente: ${PORTES_CLIENTE.toFixed(2).replace('.',',')}€</span><br>
-      Total ao cliente: <strong>${(PVP+PORTES_CLIENTE).toFixed(2).replace('.',',')}€</strong>`;
-  }
+  const items = getTshirtItems(tshirtListId);
+  const outrosItems = getOutrosItems(outrosListId);
+  const nTs = items.length;
+  const pvpTs = nTs * PVP;
+  const pvpOutros = outrosItems.reduce((s,a)=>s+(parseFloat(a.preco)||0),0);
+  const total = pvpTs + pvpOutros;
+  if(nTs === 0 && pvpOutros === 0) { el.innerHTML = ''; return; }
+  const portesMeu = nTs >= 2;
+  const totalCliente = total + (portesMeu ? 0 : PORTES_CLIENTE);
+  let html = '';
+  if(nTs > 0) html += `<strong>${nTs} t-shirt${nTs>1?'s':''}</strong> · ${pvpTs.toFixed(2).replace('.',',')}€`;
+  if(pvpOutros > 0) html += `${nTs>0?' + ':''}<strong>${pvpOutros.toFixed(2).replace('.',',')}€ outros artigos</strong>`;
+  html += nTs >= 2
+    ? `<br>✅ <span class="portes-meu">Portes a meu cargo</span> (4,06€ s/ IVA)`
+    : `<br>📦 <span class="portes-cliente">Portes cobrados ao cliente: ${PORTES_CLIENTE.toFixed(2).replace('.',',')}€</span>`;
+  html += `<br>Total ao cliente: <strong>${totalCliente.toFixed(2).replace('.',',')}€</strong>`;
+  el.innerHTML = html;
+}
+// legacy alias
+function updatePortesCalc(tshirtListId) {
+  const outrosId = tshirtListId.replace('tshirt-list','outros-list');
+  const calcId = tshirtListId.replace('tshirt-list','portes-calc');
+  updatePortesCalcById(tshirtListId, outrosId, calcId);
 }
 
 // ── JSONBIN ──────────────────────────────────────────────────────────
@@ -673,14 +724,14 @@ const stBadge={material:'bs-material',aguarda:'bs-aguarda',processo:'bs-processo
 function toggleNewForm(){
   const f=document.getElementById('new-order-form'),c=document.getElementById('new-form-chevron');
   const o=f.style.display==='block';f.style.display=o?'none':'block';c.style.transform=o?'':'rotate(90deg)';
-  if(!o && document.getElementById('new-tshirt-list').children.length===0) addTshirtItem('new-tshirt-list');
 }
 
 function addOrder(){
   const nome=document.getElementById('f-nome').value.trim();
   if(!nome){alert('Nome do cliente é obrigatório.');return;}
   const tshirts = getTshirtItems('new-tshirt-list');
-  if(tshirts.length===0){alert('Adiciona pelo menos uma t-shirt.');return;}
+  const outros = getOutrosItems('new-outros-list');
+  if(tshirts.length===0 && outros.length===0){alert('Adiciona pelo menos um artigo.');return;}
   const hoje=new Date();hoje.setDate(hoje.getDate()+5);
   const defaultEntrega=document.getElementById('f-entrega').value||hoje.toISOString().slice(0,10);
   const n = tshirts.length;
@@ -696,12 +747,13 @@ function addOrder(){
     localidade:document.getElementById('f-localidade').value.trim(),
     notas:document.getElementById('f-notas').value.trim(),
     entrega:defaultEntrega,
-    tshirts, portesMeu,
+    tshirts, outros, portesMeu,
     status:'aguarda',tracking:'',fatura:'',open:false,editing:false
   });
   syncDrive();renderAll();
   ['f-nome','f-contacto','f-nif','f-email','f-morada','f-cp','f-localidade','f-notas','f-entrega'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('new-tshirt-list').innerHTML='';
+  document.getElementById('new-outros-list').innerHTML='';
   document.getElementById('new-portes-calc').innerHTML='';
 }
 
@@ -721,7 +773,9 @@ function saveEdit(idx){
   orders[idx].notas=g('e-notas').value.trim();
   orders[idx].entrega=g('e-entrega').value;
   const tshirts = getTshirtItems(`edit-tshirt-list-${idx}`);
-  orders[idx].tshirts = tshirts.length > 0 ? tshirts : orders[idx].tshirts;
+  orders[idx].tshirts = tshirts.length > 0 ? tshirts : (orders[idx].tshirts||[]);
+  const outros = getOutrosItems(`edit-outros-list-${idx}`);
+  orders[idx].outros = outros;
   orders[idx].portesMeu = (orders[idx].tshirts||[]).length >= 2;
   orders[idx].editing=false;syncDrive();renderAll();
 }
@@ -740,9 +794,11 @@ function deleteOrder(idx){
 }
 
 function getTotal(o){
-  const n=(o.tshirts||[]).length||1;
-  const portes = o.portesMeu ? 0 : PORTES_CLIENTE;
-  return n*PVP + portes;
+  const nTs=(o.tshirts||[]).length;
+  const pvpTs = nTs * PVP;
+  const pvpOutros = (o.outros||[]).reduce((s,a)=>s+(parseFloat(a.preco)||0),0);
+  const portes = o.portesMeu ? 0 : (nTs > 0 || pvpOutros > 0 ? PORTES_CLIENTE : 0);
+  return pvpTs + pvpOutros + portes;
 }
 
 function deliveryBadge(entrega){
@@ -836,14 +892,20 @@ function renderOrders(){
 function renderCard(o,idx){
   const mf=[o.morada,[o.cp,o.localidade].filter(Boolean).join(' ')].filter(Boolean).join(', ')||'—';
   const tshirts=o.tshirts||[];
+  const outros=o.outros||[];
   const nTs=tshirts.length;
-  const tsSummary=tshirts.slice(0,2).map(t=>`${t.tamanho} ${t.cor}`).join(', ')+(tshirts.length>2?` +${tshirts.length-2}`:'')||'—';
+  const nOu=outros.length;
+  const tsSummary=tshirts.slice(0,2).map(t=>`${t.tamanho} ${t.cor}`).join(', ')+(tshirts.length>2?` +${tshirts.length-2}`:'')||'';
+  const summaryParts = [];
+  if(nTs>0) summaryParts.push(`🎽 ${nTs} t-shirt${nTs>1?'s':''}`+(tsSummary?` (${tsSummary})`:''));
+  if(nOu>0) summaryParts.push(`📦 ${nOu} outro${nOu>1?'s':''}: ${outros.slice(0,2).map(a=>a.desc||'artigo').join(', ')}${nOu>2?` +${nOu-2}`:''}`);
+  const summaryLine = summaryParts.join(' · ') || '—';
   return `<div class="order-card${o.open?' open':''}${o.status==='enviada'?' enviada':''}">
     <div class="order-summary" onclick="toggleOrder(${idx})">
       <div class="order-summary-left">
         <span class="order-id">${o.id}</span>
         <span style="font-size:13px;color:var(--text);font-weight:600">${o.nome}</span>
-        <span style="font-size:11px;color:#777">🎽 ${nTs} t-shirt${nTs>1?'s':''} · ${tsSummary}</span>
+        <span style="font-size:11px;color:#777">${summaryLine}</span>
         <span class="badge-status ${stBadge[o.status]||'bs-aguarda'}">${stLabel[o.status]||'—'}</span>
         ${deliveryBadge(o.entrega)}
       </div>
@@ -863,6 +925,12 @@ function renderCard(o,idx){
         </div>
         <div class="tshirt-list" id="edit-tshirt-list-${idx}"></div>
         <button class="btn-add-item" onclick="addTshirtItem('edit-tshirt-list-${idx}')">+ Adicionar t-shirt</button>
+        <div class="section-sep" style="margin-top:12px">📦 Outros artigos</div>
+        <div style="display:grid;grid-template-columns:1fr 90px 36px;gap:6px;margin-bottom:4px;font-size:10px;color:var(--text3);padding:0 10px">
+          <span>Descrição</span><span>Preço c/ IVA</span><span></span>
+        </div>
+        <div id="edit-outros-list-${idx}"></div>
+        <button class="btn-add-item" style="border-color:var(--green-border);color:var(--green);background:var(--green-dim)" onclick="addOutroItem('edit-outros-list-${idx}')">+ Adicionar outro artigo</button>
         <div class="portes-calc" id="edit-portes-calc-${idx}" style="margin-top:6px"></div>
         <div style="display:flex;gap:8px;margin-top:8px">
           <button class="btn-save" onclick="saveEdit(${idx})">Guardar alterações</button>
@@ -879,13 +947,19 @@ function renderCard(o,idx){
         ${o.tracking?`<div style="grid-column:1/-1">Tracking<span class="field-val">${o.tracking}</span></div>`:''}
         ${o.fatura?`<div>Nº Fatura<span class="field-val">${o.fatura}</span></div>`:''}
       </div>`}
-      ${o.editing?'':`<div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin:4px 0 6px">T-shirts</div>
+      ${o.editing?'':`${nTs>0?`<div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin:4px 0 6px">🎽 T-shirts</div>
       <div class="tshirt-list">${tshirts.map(t=>`<div class="tshirt-item" style="pointer-events:none">
         <span style="color:var(--text)">${t.desc||'—'}</span>
         <span style="color:var(--text);font-weight:600">${t.tamanho}</span>
         <span style="display:flex;align-items:center;gap:5px"><span class="color-dot" style="background:${COR_CSS[t.cor]||'#666'}"></span>${t.cor}</span>
         <span></span>
-      </div>`).join('')}</div>
+      </div>`).join('')}</div>`:''}
+      ${nOu>0?`<div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin:8px 0 6px">📦 Outros artigos</div>
+      <div>${outros.map(a=>`<div class="outros-item" style="pointer-events:none">
+        <span style="color:var(--text)">${a.desc||'—'}</span>
+        <span style="color:var(--text);font-weight:600;text-align:right">${(parseFloat(a.preco)||0).toFixed(2).replace('.',',')} €</span>
+        <span></span>
+      </div>`).join('')}</div>`:''}
       <div class="cost-box" style="margin-top:8px">
         <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Custo desta encomenda</div>
         ${renderCostRows(o)}
@@ -913,17 +987,19 @@ function renderCard(o,idx){
 
 function renderCostRows(o){
   const tshirts=o.tshirts||[];
-  const n=tshirts.length||1;
-  // custo médio (assumindo mix: contar cor vs branca)
+  const outros=o.outros||[];
+  const nTs=tshirts.length;
   const custoTs = tshirts.reduce((s,t)=>{
     return s + (t.cor==='Branco'?P_BRANCA:P_COR) + P_STAMP;
-  },0) + P_CAIXA_SIVA * n;
+  },0) + P_CAIXA_SIVA * nTs;
   const porteSiva = o.portesMeu ? P_PORTES_SIVA : 0;
+  const pvpOutros = outros.reduce((s,a)=>s+(parseFloat(a.preco)||0),0);
   const totalCusto = custoTs + porteSiva;
   const receitaSiva = getTotal(o)/1.23;
   const margem = receitaSiva - totalCusto;
-  const pct = Math.round(margem/receitaSiva*100);
-  return `<div class="cost-row"><span>T-shirts (${n}x) s/ IVA</span><span>${fmt(custoTs)}</span></div>
+  const pct = receitaSiva>0?Math.round(margem/receitaSiva*100):0;
+  return `${nTs>0?`<div class="cost-row"><span>T-shirts (${nTs}x) s/ IVA</span><span>${fmt(custoTs)}</span></div>`:''}
+    ${pvpOutros>0?`<div class="cost-row"><span>Outros artigos (s/ margem calculada)</span><span>${fmt(pvpOutros/1.23)}</span></div>`:''}
     <div class="cost-row"><span>Portes</span><span>${o.portesMeu?fmt(porteSiva):'Cliente paga'}</span></div>
     <div class="cost-row"><span>Receita total s/ IVA</span><span>${fmt(receitaSiva)}</span></div>
     <div class="cost-row" style="color:${margem>=0?'#15803d':'#dc2626'}"><span>Margem líquida</span><span>${fmt(margem)} (~${pct}%)</span></div>`;
@@ -1050,34 +1126,21 @@ function renderMiniCal(elId){
 renderMargens();
 loadOrders();
 
-// Populate edit tshirt lists after render
-const origRenderOrders = renderOrders;
-
-document.addEventListener('click', function(e) {
-  // After edit form renders, populate tshirt items
-  if(e.target.classList.contains('btn-sm') && e.target.textContent.includes('Editar')) {
-    setTimeout(() => {
-      document.querySelectorAll('[id^="edit-tshirt-list-"]').forEach(list => {
-        if(list.children.length === 0) {
-          const idx = parseInt(list.id.replace('edit-tshirt-list-',''));
-          const o = orders[idx];
-          (o.tshirts||[]).forEach(t => addTshirtItem(list.id, t.desc||'', t.tamanho, t.cor));
-        }
-      });
-    }, 50);
-  }
-});
-
-// Watch for edit forms being shown and populate tshirts
+// Watch for edit forms and populate tshirts + outros items
 const observer = new MutationObserver(() => {
   document.querySelectorAll('[id^="edit-tshirt-list-"]').forEach(list => {
     if(list.children.length === 0) {
       const idx = parseInt(list.id.replace('edit-tshirt-list-',''));
-      if(!isNaN(idx) && orders[idx]) {
-        const o = orders[idx];
-        if(o.editing) {
-          (o.tshirts||[]).forEach(t => addTshirtItem(list.id, t.desc||'', t.tamanho, t.cor));
-        }
+      if(!isNaN(idx) && orders[idx] && orders[idx].editing) {
+        (orders[idx].tshirts||[]).forEach(t => addTshirtItem(list.id, t.desc||'', t.tamanho, t.cor));
+      }
+    }
+  });
+  document.querySelectorAll('[id^="edit-outros-list-"]').forEach(list => {
+    if(list.children.length === 0) {
+      const idx = parseInt(list.id.replace('edit-outros-list-',''));
+      if(!isNaN(idx) && orders[idx] && orders[idx].editing) {
+        (orders[idx].outros||[]).forEach(a => addOutroItem(list.id, a.desc||'', a.preco||''));
       }
     }
   });
